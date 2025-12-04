@@ -6,7 +6,6 @@ const StudentDashboard = () => {
 
   return (
     <div className="dashboard">
-
       {/* Sidebar */}
       <div className="sidebar">
         <h2 className="logo">Student</h2>
@@ -26,17 +25,22 @@ const StudentDashboard = () => {
 
       {/* Main Content */}
       <div className="main-content">
-
         {/* Home Screen */}
         {!activeTab && (
           <div className="card-container">
-            <div className="section-card" onClick={() => setActiveTab("profile")}>
+            <div
+              className="section-card"
+              onClick={() => setActiveTab("profile")}
+            >
               My Profile
             </div>
             <div className="section-card" onClick={() => setActiveTab("fees")}>
               Fees
             </div>
-            <div className="section-card" onClick={() => setActiveTab("attendance")}>
+            <div
+              className="section-card"
+              onClick={() => setActiveTab("attendance")}
+            >
               Attendance
             </div>
             <div className="section-card" onClick={() => setActiveTab("marks")}>
@@ -80,7 +84,6 @@ const StudentDashboard = () => {
             <p>Computer: 95</p>
           </div>
         )}
-
       </div>
     </div>
   );

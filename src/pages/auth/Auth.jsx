@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState("student");
@@ -112,17 +113,61 @@ function UserForm({ type, cardStyle, btnLogin, btnRegister }) {
   );
 }
 
+// Admin form
 function AdminForm({ cardStyle, btnLogin }) {
+  const [admin, setAdmin] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setAdmin({
+      ...admin,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/admin/login",
+        admin
+      );
+
+      alert("Admin Login Successful!");
+      console.log(res.data);
+
+      // Example: if backend returns token
+      // localStorage.setItem("adminToken", res.data.token);
+    } catch (err) {
+      alert("Admin Login Failed!");
+      console.error(err);
+    }
+  };
+
   return (
     <div style={cardStyle}>
       <h5>Admin Login</h5>
-      <form>
-        <input type="email" className="form-control mb-2" placeholder="Email" />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          className="form-control mb-2"
+          placeholder="Email"
+          value={admin.email}
+          onChange={handleChange}
+        />
+
         <input
           type="password"
+          name="password"
           className="form-control mb-2"
           placeholder="Password"
+          value={admin.password}
+          onChange={handleChange}
         />
+
         <button className="btn w-100" style={btnLogin}>
           Login
         </button>
