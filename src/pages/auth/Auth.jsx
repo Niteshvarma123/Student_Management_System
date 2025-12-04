@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState("student");
@@ -120,6 +121,8 @@ function AdminForm({ cardStyle, btnLogin }) {
     password: "",
   });
 
+  const navigate = useNavigate(); // ⭐ Needed for redirect
+
   const handleChange = (e) => {
     setAdmin({
       ...admin,
@@ -138,8 +141,10 @@ function AdminForm({ cardStyle, btnLogin }) {
       alert("Admin Login Successful!");
       console.log(res.data);
 
-      // Example: if backend returns token
+      // Example: Save token if needed
       // localStorage.setItem("adminToken", res.data.token);
+
+      navigate("/admin/dashboard"); // ⭐ Redirect after success
     } catch (err) {
       alert("Admin Login Failed!");
       console.error(err);
