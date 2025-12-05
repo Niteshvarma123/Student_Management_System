@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState("student");
@@ -93,12 +91,18 @@ function UserForm({ type, cardStyle, btnLogin, btnRegister }) {
           className="form-control mb-2"
           placeholder="Password"
         />
-        <button className="btn w-100 mb-3" style={btnLogin}>
+        <button className="btn w-100" style={btnLogin}>
           Login
         </button>
       </form>
+    </div>
+  );
+}
 
-      <h5>{type} Register</h5>
+function AdminForm({ cardStyle, btnLogin }) {
+  return (
+    <div style={cardStyle}>
+      <h5>Admin Login</h5>
       <form>
         <input type="email" className="form-control mb-2" placeholder="Email" />
         <input
@@ -106,73 +110,6 @@ function UserForm({ type, cardStyle, btnLogin, btnRegister }) {
           className="form-control mb-2"
           placeholder="Password"
         />
-        <button className="btn w-100" style={btnRegister}>
-          Register
-        </button>
-      </form>
-    </div>
-  );
-}
-
-// Admin form
-function AdminForm({ cardStyle, btnLogin }) {
-  const [admin, setAdmin] = useState({
-    email: "",
-    password: "",
-  });
-
-  const navigate = useNavigate(); // ⭐ Needed for redirect
-
-  const handleChange = (e) => {
-    setAdmin({
-      ...admin,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post(
-        "http://localhost:8080/api/admin/login",
-        admin
-      );
-
-      alert("Admin Login Successful!");
-      console.log(res.data);
-
-      // Example: Save token if needed
-      // localStorage.setItem("adminToken", res.data.token);
-
-      navigate("/admin/dashboard"); // ⭐ Redirect after success
-    } catch (err) {
-      alert("Admin Login Failed!");
-      console.error(err);
-    }
-  };
-
-  return (
-    <div style={cardStyle}>
-      <h5>Admin Login</h5>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          className="form-control mb-2"
-          placeholder="Email"
-          value={admin.email}
-          onChange={handleChange}
-        />
-
-        <input
-          type="password"
-          name="password"
-          className="form-control mb-2"
-          placeholder="Password"
-          value={admin.password}
-          onChange={handleChange}
-        />
-
         <button className="btn w-100" style={btnLogin}>
           Login
         </button>

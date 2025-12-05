@@ -34,10 +34,10 @@ export default function AppNavbar() {
               Home
             </Nav.Link>
             <Nav.Link as={Link} to="/about" style={{ color: "#F9F9F9" }}>
-              About
+              About us
             </Nav.Link>
             <Nav.Link as={Link} to="/contact" style={{ color: "#F9F9F9" }}>
-              Contact
+              Contact us
             </Nav.Link>
             <Nav.Link as={Link} to="/auth" style={{ color: "#F9F9F9" }}>
               Login/Register
