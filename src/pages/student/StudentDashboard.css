@@ -69,13 +69,13 @@ body {
 }
 
 .section-card:hover {
-  background: #c8d4e3;
+  background: #3abf7c;
 }
 
 /* Detail section */
 .detail-card {
   width: 60%;
-  background: white;
+  background: rgb(155, 37, 70);
   padding: 25px;
   border-radius: 10px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.15);
