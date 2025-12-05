@@ -4,8 +4,14 @@ import Navbar from "../components/Navbar/Navbar.jsx";
 import Auth from "../pages/auth/Auth.jsx";
 import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
 import Footer from "../components/Footer/Footer.jsx";
+
+// Friend's imports
 import ContactForm from "../pages/contact/Contact.jsx";
 import About from "../pages/about/About us.jsx";
+
+// Your original imports
+import StudentDashboard from "../pages/student/StudentDashboard.jsx";
+import TeacherDashboard from "../pages/teacher/TeacherDashboard.jsx";
 
 export default function AppRouter() {
   return (
@@ -18,8 +24,14 @@ export default function AppRouter() {
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+            {/* Friend's routes */}
             <Route path="/contact" element={<ContactForm />} />
             <Route path="/about" element={<About />} />
+
+            {/* Your routes */}
+            <Route path="/teacher" element={<TeacherDashboard />} />
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
           </Routes>
         </div>
 
