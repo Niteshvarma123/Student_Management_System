@@ -1,0 +1,111 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 240px;
+  background: #1e2a38;
+  color: #fff;
+  padding: 20px;
+}
+
+.logo {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  padding: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+ul li:hover,
+ul li.active {
+  background: #3b4a60;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: #f5f7fa;
+  overflow-y: auto;
+}
+
+.tab-title {
+  font-size: 26px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Cards Section */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+}
+
+.card {
+  background:  #87CEEB;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  background-color: rgba(96, 168, 206, 0.6);
+ 
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #555;
+}
+
+.card h1 {
+  margin-top: 8px;
+  font-size: 30px;
+  color: #0078ff;
+}
+
+.card p {
+  color: #666;
+  font-size: 15px;
+  margin-top: 5px;
+}
+/* Scrolling Animation for Page Headings */
+.tab-title {
+  font-size: 50px;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  text-transform: uppercase;
+  display: inline-block;
+  color: #071319;
+  text-shadow: 0 0 10px rgba(225, 223, 240, 0.301), 0 0 20px rgba(7, 17, 23, 0.6);
+  animation: scrollGlow 6s linear infinite alternate;
+}
+
+@keyframes scrollGlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
