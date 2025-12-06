@@ -53,21 +53,19 @@ ul li.active {
   display: flex;
   flex-direction: column;
   gap: 18px;
-
 }
 
 .card {
-  background:  #87CEEB;
+  background: #87ceeb;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease-in-out;
 }
 
 .card:hover {
   transform: translateY(-3px);
   background-color: rgba(96, 168, 206, 0.6);
- 
 }
 
 .card h3 {
@@ -97,15 +95,25 @@ ul li.active {
   text-transform: uppercase;
   display: inline-block;
   color: #071319;
-  text-shadow: 0 0 10px rgba(225, 223, 240, 0.301), 0 0 20px rgba(7, 17, 23, 0.6);
-  animation: scrollGlow 6s linear infinite alternate;
+  text-shadow: 0 0 10px rgba(225, 223, 240, 0.301),
+    0 0 20px rgba(7, 17, 23, 0.6);
 }
 
-@keyframes scrollGlow {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+.sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout {
+  margin-top: 200px;
+  background: #d72828 !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+.tab-title {
+  animation: none !important;
+  transform: none !important;
+  text-align: center;
 }

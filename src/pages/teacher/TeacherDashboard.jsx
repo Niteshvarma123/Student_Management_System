@@ -3,6 +3,7 @@ import "./TeacherDashboard.css";
 
 const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [movingText] = useState("Teacher Dashboard");
 
   const dashboardCards = [
     { title: "Total Students", value: "120", desc: "In current semester" },
@@ -75,33 +76,37 @@ const TeacherDashboard = () => {
             className={activeTab === "dashboard" ? "active" : ""}
             onClick={() => setActiveTab("dashboard")}
           >
-            Dashboard
+            📊 Dashboard
           </li>
+
           <li
             className={activeTab === "students" ? "active" : ""}
             onClick={() => setActiveTab("students")}
           >
-            Students
+            👥 Students
           </li>
+
           <li
             className={activeTab === "attendance" ? "active" : ""}
             onClick={() => setActiveTab("attendance")}
           >
-            Attendance
+            📅 Attendance
           </li>
+
           <li
             className={activeTab === "results" ? "active" : ""}
             onClick={() => setActiveTab("results")}
           >
-            Results
+            📝 Results
           </li>
+
+          <li className="logout">🚪 Logout</li>
         </ul>
       </div>
 
       {/* Main Content */}
       <div className="main-content">
-        <h1 className="tab-title">{activeTab.toUpperCase()}</h1>
-
+        <h1 className="tab-title">{movingText.toUpperCase()}</h1>
         <div className="cards-container">{renderCards()}</div>
       </div>
     </div>

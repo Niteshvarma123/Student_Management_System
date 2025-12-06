@@ -1,112 +1,83 @@
+/* Prevent any horizontal scrollbar coming from long animated elements */
+html,
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
+  box-sizing: border-box;
+  overflow-x: hidden; /* hide horizontal scroll */
 }
 
-.dashboard {
-  display: flex;
-  height: 100vh;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 230px;
-  background: #0049a8;
-  color: #fff;
-  padding: 20px 10px;
-}
-
-.logo {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 25px;
-}
-
-.sidebar li {
-  list-style: none;
-  padding: 15px;
-  margin: 8px 0;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.sidebar li:hover,
-.sidebar li.active {
-  background: #00357e;
-}
-
-.logout {
-  margin-top: 180px;
-  background: #d72828;
-}
-
-/* Main content */
+/* MAIN CONTENT - ensure inner scrolling only vertically */
 .main-content {
   flex: 1;
   padding: 30px;
+  background: #f5f7fa;
+  overflow-y: auto;
+  overflow-x: hidden; /* prevent horizontal scroll inside content */
 }
 
-/* Cards on home page */
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 25px;
+/* Title: don't let it stretch full width, limit movement to pixels */
+.tab-title {
+  display: inline-block; /* shrink to its content */
+  width: auto; /* important: don't force 100% */
+  max-width: calc(100% - 40px); /* ensure it never exceeds viewport */
+  white-space: nowrap; /* keep single line if you want that */
+  font-size: 50px;
+  font-weight: bold;
+  color: #071319;
+  text-shadow: 0 0 10px rgba(225, 223, 240, 0.301),
+    0 0 20px rgba(7, 17, 23, 0.6);
+  /* change animation duration or remove if you don't want movement */
+  animation: scrollGlow 4s ease-in-out infinite alternate;
 }
 
-.section-card {
-  height: 140px;
-  background: #e3e8f0;
+/* small px movement instead of % (prevents big slide on wide screens) */
+@keyframes scrollGlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(28px); /* small, fixed movement */
+  }
+}
+
+/* If you prefer NO movement, comment out the animation line above
+   or use: animation: none; */
+
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #ffffff;
   border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.profile-table th,
+.profile-table td {
+  padding: 12px 18px;
+  font-size: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-table th {
+  background: #f3f4f6;
+  text-align: left;
+  width: 180px;
+  font-weight: bold;
+  color: #1e2a38;
+}
+
+.profile-table td {
+  background: #ffffff;
+  color: #333;
+}
+
+.profile-table tr:last-child td {
+  border-bottom: none;
+}
+
+.sidebar li {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  transition: 0.3s ease;
-}
-
-.section-card:hover {
-  background: #3abf7c;
-}
-
-/* Detail section */
-.detail-card {
-  width: 60%;
-  background: rgb(155, 37, 70);
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-}
-
-/* Detail section */
-.detail-card {
-  width: 60%;
-  max-width: 500px;
-  margin: 50px auto; /* center horizontally */
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
-  color: #000000;
-  background-color: #b0d1d0;
-  text-align: center;
-}
-
-/* Different colors for each section */
-.detail-card.profile {
-  background: #4caf50; /* green */
-}
-
-.detail-card.fees {
-  background: #ff9800; /* orange */
-}
-
-.detail-card.attendance {
-  background: #2196f3; /* blue */
-}
-
-.detail-card.marks {
-  background: #9c27b0; /* purple */
+  gap: 10px;
 }

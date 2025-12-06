@@ -21,14 +21,14 @@ export default function AppRouter() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
             {/* Friend's routes */}
             <Route path="/contact" element={<ContactForm />} />
             <Route path="/about" element={<About />} />
 
             {/* Your routes */}
-            <Route path="/teacher" element={<TeacherDashboard />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route path="/student/dashboard" element={<StudentDashboard />} />
           </Routes>
         </div>

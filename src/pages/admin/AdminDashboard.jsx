@@ -1,91 +1,197 @@
-import React from "react";
+import React, { useState } from "react";
+import "./AdminDashboard.css";
 
-export default function AdminDashboard() {
-  const cardStyle = {
-    backgroundColor: "#FCE2C5", // Warm Sand
-    borderRadius: "10px",
-    padding: "20px",
-    color: "#333333",
-    boxShadow: "0 0 10px rgba(0,0,0,0.15)",
-  };
+const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState("dashboard");
 
-  const tableStyle = {
-    backgroundColor: "#FCE2C5",
-    borderRadius: "10px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.15)",
-    padding: "15px",
-  };
+  // Sample Data
+  const dashboardCards = [
+    { title: "Total Students", value: "250", desc: "Registered students" },
+    { title: "Total Teachers", value: "20", desc: "Registered teachers" },
+    { title: "Classes", value: "12", desc: "Active classes" },
+    { title: "Fees Collected", value: "₹5,00,000", desc: "This semester" },
+    { title: "Attendance Avg", value: "88%", desc: "Overall" },
+    { title: "Pending Registrations", value: "3", desc: "New requests" },
+  ];
 
-  const headerStyle = {
-    backgroundColor: "#1E2F2F", // Deep Forest (navbar/table header)
-    color: "#F9F9F9",
-  };
+  const studentTable = [
+    { name: "Prudhvi", roll: "123", class: "10th", status: "Active" },
+    { name: "Rohit", roll: "124", class: "10th", status: "Active" },
+    { name: "Kavya", roll: "125", class: "9th", status: "Pending" },
+  ];
 
-  const editBtn = { backgroundColor: "#FF6F3C", color: "#F9F9F9" }; // Solar Orange
-  const deleteBtn = { backgroundColor: "#3AAFA9", color: "#F9F9F9" }; // Teal Green
+  const teacherTable = [
+    { name: "Kavya", empId: "T001", subject: "Math", status: "Active" },
+    { name: "Ramesh", empId: "T002", subject: "Science", status: "Active" },
+  ];
+
+  const renderDashboardCards = () => (
+    <div className="cards-container">
+      {dashboardCards.map((card, index) => (
+        <div className="card" key={index}>
+          <h3>{card.title}</h3>
+          <h1>{card.value}</h1>
+          <p>{card.desc}</p>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderStudentTable = () => (
+    <div className="table-container">
+      <h2>Students</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Roll No</th>
+            <th>Class</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {studentTable.map((s, idx) => (
+            <tr key={idx}>
+              <td>{s.name}</td>
+              <td>{s.roll}</td>
+              <td>{s.class}</td>
+              <td>{s.status}</td>
+              <td>
+                <button>Edit</button> <button>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const renderTeacherTable = () => (
+    <div className="table-container">
+      <h2>Teachers</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Employee ID</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {teacherTable.map((t, idx) => (
+            <tr key={idx}>
+              <td>{t.name}</td>
+              <td>{t.empId}</td>
+              <td>{t.subject}</td>
+              <td>{t.status}</td>
+              <td>
+                <button>Edit</button> <button>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const renderAddStudentForm = () => (
+    <div className="form-card">
+      <h2>Add Student</h2>
+      <form>
+        <input type="number" placeholder="Roll No" required />
+        <input type="text" placeholder="Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <input type="number" placeholder="Phone" required />
+        <input type="number" placeholder="Total Fee" required />
+        <input type="number" placeholder="Paid" required />
+        <input type="number" placeholder="Unpaid" required />
+        <input type="text" placeholder="Address" required />
+        <button type="submit">Add Student</button>
+      </form>
+    </div>
+  );
+
+  const renderAddTeacherForm = () => (
+    <div className="form-card">
+      <h2>Add Teacher</h2>
+      <form>
+        <input type="text" placeholder="Name" required />
+        <input type="text" placeholder="Employee ID" required />
+        <input type="text" placeholder="Subject" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <input type="text" placeholder="Contact No" required />
+        <button type="submit">Add Teacher</button>
+      </form>
+    </div>
+  );
 
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4" style={{ color: "#333333" }}>
-        Admin Dashboard
-      </h2>
-
-      {/* Stats Cards */}
-      <div className="row mb-4">
-        {["Total Students", "Total Teachers", "Total Classes"].map(
-          (title, i) => (
-            <div className="col-md-4 mb-3" key={i}>
-              <div style={cardStyle}>
-                <div
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {title}
-                </div>
-                <div style={{ fontSize: "24px" }}>{i * 10 + 50}</div>
-              </div>
-            </div>
-          )
-        )}
+    <div className="dashboard">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <h2 className="logo">Admin</h2>
+        <ul>
+          <li
+            className={activeTab === "dashboard" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("dashboard");
+            }}
+          >
+            📊 Dashboard
+          </li>
+          <li
+            className={activeTab === "students" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("students");
+            }}
+          >
+            👨‍🎓 Students
+          </li>
+          <li
+            className={activeTab === "teachers" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("teachers");
+            }}
+          >
+            👩‍🏫 Teachers
+          </li>
+          <li
+            className={activeTab === "addStudent" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("addStudent");
+            }}
+          >
+            ➕ Add Student
+          </li>
+          <li
+            className={activeTab === "addTeacher" ? "active" : ""}
+            onClick={() => {
+              setActiveTab("addTeacher");
+            }}
+          >
+            ➕ Add Teacher
+          </li>
+          <li className="logout">🚪 Logout</li>
+        </ul>
       </div>
 
-      {/* Students Table */}
-      <h4 style={{ color: "#333333" }}>Students</h4>
-      <div style={tableStyle}>
-        <table className="table">
-          <thead style={headerStyle}>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Class</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              { name: "John Doe", email: "john@example.com", cls: "10A" },
-              { name: "Jane Smith", email: "jane@example.com", cls: "10B" },
-            ].map((stu, i) => (
-              <tr key={i}>
-                <td>{stu.name}</td>
-                <td>{stu.email}</td>
-                <td>{stu.cls}</td>
-                <td>
-                  <button className="btn btn-sm me-2" style={editBtn}>
-                    Edit
-                  </button>
-                  <button className="btn btn-sm" style={deleteBtn}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Main Content */}
+      <div className="main-content">
+        <h1 className="tab-title">{activeTab.toUpperCase()}</h1>
+
+        {activeTab === "dashboard" && renderDashboardCards()}
+        {activeTab === "students" && renderStudentTable()}
+        {activeTab === "teachers" && renderTeacherTable()}
+        {activeTab === "addStudent" && renderAddStudentForm()}
+        {activeTab === "addTeacher" && renderAddTeacherForm()}
       </div>
     </div>
   );
-}
+};
+
+export default AdminDashboard;

@@ -1,0 +1,240 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+}
+
+/* Dashboard layout */
+.dashboard {
+  display: flex;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #1e2a38;
+  color: #fff;
+  padding: 20px;
+}
+
+.logo {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+  background: #3b4a60;
+}
+
+.logout {
+  margin-top: 180px;
+  background: #d72828 !important;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: #f5f7fa;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Moving title */
+.tab-title {
+  font-size: 50px;
+  font-weight: bold;
+  color: #071319;
+  text-shadow: 0 0 10px rgba(225, 223, 240, 0.301),
+    0 0 20px rgba(7, 17, 23, 0.6);
+}
+
+.scroll-text {
+  display: block;
+  margin: 10px 0 20px 0;
+  font-size: 20px;
+  color: #444;
+}
+
+/* Cards */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.card {
+  flex: 1 1 250px;
+  background: #87ceeb;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  background-color: rgba(96, 168, 206, 0.6);
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #444;
+}
+
+.card h1 {
+  margin-top: 8px;
+  font-size: 30px;
+  color: #0078ff;
+}
+
+.card p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Tables */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+table th {
+  background-color: #1e2a38;
+  color: #fff;
+}
+
+button {
+  padding: 5px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+button:first-of-type {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+button:last-of-type {
+  background-color: #d72828;
+  color: #fff;
+}
+
+/* Forms */
+.form-card {
+  background: #b0d1d0;
+  padding: 25px;
+  border-radius: 10px;
+  width: 60%;
+  max-width: 500px;
+  margin: 40px auto;
+  text-align: center;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+}
+
+.form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-card input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.form-card button {
+  background-color: #0078ff;
+  color: #fff;
+  padding: 10px;
+  font-size: 16px;
+}
+.scroll-text {
+  font-size: 20px;
+  color: #444;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  animation: scrollGlow 6s linear infinite alternate;
+}
+
+@keyframes scrollGlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(28px); /* adjust for small movement */
+  }
+}
+.cards-container {
+  display: flex;
+  flex-wrap: wrap; /* allows multiple rows */
+  gap: 20px; /* spacing between cards */
+  justify-content: center; /* center the cards */
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card {
+  flex: 0 0 48%; /* each card takes ~half the row */
+  background: #87ceeb;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-sizing: border-box; /* ensures padding doesn't break width */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive: 1 card per row on small screens */
+@media (max-width: 600px) {
+  .card {
+    flex: 0 0 100%;
+  }
+}

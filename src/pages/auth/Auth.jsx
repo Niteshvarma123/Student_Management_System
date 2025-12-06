@@ -16,12 +16,6 @@ export default function Auth() {
     color: "#F9F9F9",
   };
 
-  const buttonSecondary = {
-    backgroundColor: "#3AAFA9", // Teal Green
-    borderColor: "#3AAFA9",
-    color: "#F9F9F9",
-  };
-
   return (
     <div className="container mt-5" style={{ maxWidth: "500px" }}>
       <h2 className="mb-4 text-center" style={{ color: "#333333" }}>
@@ -62,7 +56,6 @@ export default function Auth() {
           type="Student"
           cardStyle={cardStyle}
           btnLogin={buttonPrimary}
-          btnRegister={buttonSecondary}
         />
       )}
       {activeTab === "teacher" && (
@@ -70,7 +63,6 @@ export default function Auth() {
           type="Teacher"
           cardStyle={cardStyle}
           btnLogin={buttonPrimary}
-          btnRegister={buttonSecondary}
         />
       )}
       {activeTab === "admin" && (
@@ -80,7 +72,7 @@ export default function Auth() {
   );
 }
 
-function UserForm({ type, cardStyle, btnLogin, btnRegister }) {
+function UserForm({ type, cardStyle, btnLogin }) {
   return (
     <div style={cardStyle}>
       <h5>{type} Login</h5>
