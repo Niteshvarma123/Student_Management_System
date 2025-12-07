@@ -1,0 +1,83 @@
+/* Prevent any horizontal scrollbar coming from long animated elements */
+html,
+body {
+  box-sizing: border-box;
+  overflow-x: hidden; /* hide horizontal scroll */
+}
+
+/* MAIN CONTENT - ensure inner scrolling only vertically */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: #f5f7fa;
+  overflow-y: auto;
+  overflow-x: hidden; /* prevent horizontal scroll inside content */
+}
+
+/* Title: don't let it stretch full width, limit movement to pixels */
+.tab-title {
+  display: inline-block; /* shrink to its content */
+  width: auto; /* important: don't force 100% */
+  max-width: calc(100% - 40px); /* ensure it never exceeds viewport */
+  white-space: nowrap; /* keep single line if you want that */
+  font-size: 50px;
+  font-weight: bold;
+  color: #071319;
+  text-shadow: 0 0 10px rgba(225, 223, 240, 0.301),
+    0 0 20px rgba(7, 17, 23, 0.6);
+  /* change animation duration or remove if you don't want movement */
+  animation: scrollGlow 4s ease-in-out infinite alternate;
+}
+
+/* small px movement instead of % (prevents big slide on wide screens) */
+@keyframes scrollGlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(28px); /* small, fixed movement */
+  }
+}
+
+/* If you prefer NO movement, comment out the animation line above
+   or use: animation: none; */
+
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.profile-table th,
+.profile-table td {
+  padding: 12px 18px;
+  font-size: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-table th {
+  background: #f3f4f6;
+  text-align: left;
+  width: 180px;
+  font-weight: bold;
+  color: #1e2a38;
+}
+
+.profile-table td {
+  background: #ffffff;
+  color: #333;
+}
+
+.profile-table tr:last-child td {
+  border-bottom: none;
+}
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
