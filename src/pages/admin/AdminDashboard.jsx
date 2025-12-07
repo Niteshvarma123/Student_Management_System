@@ -1,10 +1,167 @@
 import React, { useState } from "react";
-import "./AdminDashboard.css";
+
+const styles = {
+  dashboard: {
+    display: "flex",
+    height: "100vh",
+    overflowX: "hidden",
+    background: "#f4f6f9",
+    fontFamily: "Arial, sans-serif",
+  },
+  sidebar: {
+    width: "240px",
+    background: "#1e2a38",
+    color: "#fff",
+    padding: "20px",
+  },
+  logo: {
+    textAlign: "center",
+    fontSize: "22px",
+    marginBottom: "20px",
+  },
+  sidebarList: {
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+  },
+  sidebarItem: {
+    padding: "14px",
+    cursor: "pointer",
+    borderRadius: "6px",
+    fontSize: "16px",
+    transition: "0.3s",
+    marginBottom: "6px",
+  },
+  sidebarItemActive: {
+    background: "#3b4a60",
+  },
+  logout: {
+    marginTop: "180px",
+    background: "#d72828",
+  },
+  mainContent: {
+    flex: 1,
+    padding: "30px",
+    background: "#f5f7fa",
+    overflowY: "auto",
+    overflowX: "hidden",
+  },
+  tabTitle: {
+    fontSize: "50px",
+    fontWeight: "bold",
+    color: "#071319",
+    textShadow:
+      "0 0 10px rgba(225, 223, 240, 0.301), 0 0 20px rgba(7, 17, 23, 0.6)",
+    marginBottom: "20px",
+  },
+  cardsContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "20px",
+    justifyContent: "center",
+    maxWidth: "800px",
+    margin: "0 auto",
+  },
+  card: {
+    flex: "0 0 48%",
+    background: "#87ceeb",
+    padding: "20px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    transition: "transform 0.3s, boxShadow 0.3s",
+    boxSizing: "border-box",
+  },
+  cardTitle: {
+    margin: 0,
+    fontSize: "22px",
+    color: "#444",
+  },
+  cardValue: {
+    marginTop: "8px",
+    fontSize: "30px",
+    color: "#0078ff",
+  },
+  cardDesc: {
+    marginTop: "5px",
+    fontSize: "14px",
+    color: "#555",
+  },
+  tableContainer: {
+    overflowX: "auto",
+    marginTop: "20px",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "20px",
+  },
+  th: {
+    padding: "12px",
+    border: "1px solid #ccc",
+    textAlign: "center",
+    backgroundColor: "#1e2a38",
+    color: "#fff",
+  },
+  td: {
+    padding: "12px",
+    border: "1px solid #ccc",
+    textAlign: "center",
+  },
+  buttonBase: {
+    padding: "5px 10px",
+    margin: "2px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    transition: "0.2s",
+  },
+  editButton: {
+    backgroundColor: "#4caf50",
+    color: "#fff",
+  },
+  deleteButton: {
+    backgroundColor: "#d72828",
+    color: "#fff",
+  },
+  formCard: {
+    background: "#b0d1d0",
+    padding: "25px",
+    borderRadius: "10px",
+    width: "60%",
+    maxWidth: "500px",
+    margin: "40px auto",
+    textAlign: "center",
+    boxShadow: "0 3px 15px rgba(0, 0, 0, 0.2)",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  input: {
+    padding: "10px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "16px",
+  },
+  formButton: {
+    backgroundColor: "#0078ff",
+    color: "#fff",
+    padding: "10px",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    marginTop: "8px",
+  },
+};
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [hoveredCard, setHoveredCard] = useState(null); // ✅ new state
 
-  // Sample Data
+
   const dashboardCards = [
     { title: "Total Students", value: "250", desc: "Registered students" },
     { title: "Total Teachers", value: "20", desc: "Registered teachers" },
@@ -25,40 +182,67 @@ const AdminDashboard = () => {
     { name: "Ramesh", empId: "T002", subject: "Science", status: "Active" },
   ];
 
-  const renderDashboardCards = () => (
-    <div className="cards-container">
-      {dashboardCards.map((card, index) => (
-        <div className="card" key={index}>
-          <h3>{card.title}</h3>
-          <h1>{card.value}</h1>
-          <p>{card.desc}</p>
-        </div>
-      ))}
+   const renderDashboardCards = () => (
+    <div style={styles.cardsContainer}>
+      {dashboardCards.map((card, index) => {
+        const isHovered = hoveredCard === index;
+
+        return (
+          <div
+            key={index}
+            style={{
+              ...styles.card,
+              transform: isHovered ? "translateY(-5px)" : "translateY(0px)",
+              boxShadow: isHovered
+                ? "0 8px 20px rgba(0,0,0,0.2)"
+                : "0 4px 12px rgba(0,0,0,0.1)",
+              transition: "0.3s",
+            }}
+            onMouseEnter={() => setHoveredCard(index)}
+            onMouseLeave={() => setHoveredCard(null)}
+          >
+            <h3 style={styles.cardTitle}>{card.title}</h3>
+            <h1 style={styles.cardValue}>{card.value}</h1>
+            <p style={styles.cardDesc}>{card.desc}</p>
+          </div>
+        );
+      })}
     </div>
   );
 
+
+
   const renderStudentTable = () => (
-    <div className="table-container">
+    <div style={styles.tableContainer}>
       <h2>Students</h2>
-      <table>
+      <table style={styles.table}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Roll No</th>
-            <th>Class</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th style={styles.th}>Name</th>
+            <th style={styles.th}>Roll No</th>
+            <th style={styles.th}>Class</th>
+            <th style={styles.th}>Status</th>
+            <th style={styles.th}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {studentTable.map((s, idx) => (
             <tr key={idx}>
-              <td>{s.name}</td>
-              <td>{s.roll}</td>
-              <td>{s.class}</td>
-              <td>{s.status}</td>
-              <td>
-                <button>Edit</button> <button>Delete</button>
+              <td style={styles.td}>{s.name}</td>
+              <td style={styles.td}>{s.roll}</td>
+              <td style={styles.td}>{s.class}</td>
+              <td style={styles.td}>{s.status}</td>
+              <td style={styles.td}>
+                <button
+                  style={{ ...styles.buttonBase, ...styles.editButton }}
+                >
+                  Edit
+                </button>
+                <button
+                  style={{ ...styles.buttonBase, ...styles.deleteButton }}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -68,27 +252,36 @@ const AdminDashboard = () => {
   );
 
   const renderTeacherTable = () => (
-    <div className="table-container">
+    <div style={styles.tableContainer}>
       <h2>Teachers</h2>
-      <table>
+      <table style={styles.table}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Employee ID</th>
-            <th>Subject</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th style={styles.th}>Name</th>
+            <th style={styles.th}>Employee ID</th>
+            <th style={styles.th}>Subject</th>
+            <th style={styles.th}>Status</th>
+            <th style={styles.th}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {teacherTable.map((t, idx) => (
             <tr key={idx}>
-              <td>{t.name}</td>
-              <td>{t.empId}</td>
-              <td>{t.subject}</td>
-              <td>{t.status}</td>
-              <td>
-                <button>Edit</button> <button>Delete</button>
+              <td style={styles.td}>{t.name}</td>
+              <td style={styles.td}>{t.empId}</td>
+              <td style={styles.td}>{t.subject}</td>
+              <td style={styles.td}>{t.status}</td>
+              <td style={styles.td}>
+                <button
+                  style={{ ...styles.buttonBase, ...styles.editButton }}
+                >
+                  Edit
+                </button>
+                <button
+                  style={{ ...styles.buttonBase, ...styles.deleteButton }}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -98,91 +291,105 @@ const AdminDashboard = () => {
   );
 
   const renderAddStudentForm = () => (
-    <div className="form-card">
+    <div style={styles.formCard}>
       <h2>Add Student</h2>
-      <form>
-        <input type="number" placeholder="Roll No" required />
-        <input type="text" placeholder="Name" required />
-        <input type="email" placeholder="Email" required />
-        <input type="password" placeholder="Password" required />
-        <input type="number" placeholder="Phone" required />
-        <input type="number" placeholder="Total Fee" required />
-        <input type="number" placeholder="Paid" required />
-        <input type="number" placeholder="Unpaid" required />
-        <input type="text" placeholder="Address" required />
-        <button type="submit">Add Student</button>
+      <form style={styles.form}>
+        <input type="number" placeholder="Roll No" required style={styles.input} />
+        <input type="text" placeholder="Name" required style={styles.input} />
+        <input type="email" placeholder="Email" required style={styles.input} />
+        <input type="password" placeholder="Password" required style={styles.input} />
+        <input type="number" placeholder="Phone" required style={styles.input} />
+        <input type="number" placeholder="Total Fee" required style={styles.input} />
+        <input type="number" placeholder="Paid" required style={styles.input} />
+        <input type="number" placeholder="Unpaid" required style={styles.input} />
+        <input type="text" placeholder="Address" required style={styles.input} />
+        <button type="submit" style={styles.formButton}>
+          Add Student
+        </button>
       </form>
     </div>
   );
 
   const renderAddTeacherForm = () => (
-    <div className="form-card">
+    <div style={styles.formCard}>
       <h2>Add Teacher</h2>
-      <form>
-        <input type="text" placeholder="Name" required />
-        <input type="text" placeholder="Employee ID" required />
-        <input type="text" placeholder="Subject" required />
-        <input type="email" placeholder="Email" required />
-        <input type="password" placeholder="Password" required />
-        <input type="text" placeholder="Contact No" required />
-        <button type="submit">Add Teacher</button>
+      <form style={styles.form}>
+        <input type="text" placeholder="Name" required style={styles.input} />
+        <input
+          type="text"
+          placeholder="Employee ID"
+          required
+          style={styles.input}
+        />
+        <input type="text" placeholder="Subject" required style={styles.input} />
+        <input type="email" placeholder="Email" required style={styles.input} />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="Contact No"
+          required
+          style={styles.input}
+        />
+        <button type="submit" style={styles.formButton}>
+          Add Teacher
+        </button>
       </form>
     </div>
   );
 
+  const sidebarItemStyle = (tab) => ({
+    ...styles.sidebarItem,
+    ...(activeTab === tab ? styles.sidebarItemActive : {}),
+  });
+
   return (
-    <div className="dashboard">
+    <div style={styles.dashboard}>
       {/* Sidebar */}
-      <div className="sidebar">
-        <h2 className="logo">Admin</h2>
-        <ul>
+      <div style={styles.sidebar}>
+        <h2 style={styles.logo}>Admin</h2>
+        <ul style={styles.sidebarList}>
           <li
-            className={activeTab === "dashboard" ? "active" : ""}
-            onClick={() => {
-              setActiveTab("dashboard");
-            }}
+            style={sidebarItemStyle("dashboard")}
+            onClick={() => setActiveTab("dashboard")}
           >
             📊 Dashboard
           </li>
           <li
-            className={activeTab === "students" ? "active" : ""}
-            onClick={() => {
-              setActiveTab("students");
-            }}
+            style={sidebarItemStyle("students")}
+            onClick={() => setActiveTab("students")}
           >
             👨‍🎓 Students
           </li>
           <li
-            className={activeTab === "teachers" ? "active" : ""}
-            onClick={() => {
-              setActiveTab("teachers");
-            }}
+            style={sidebarItemStyle("teachers")}
+            onClick={() => setActiveTab("teachers")}
           >
             👩‍🏫 Teachers
           </li>
           <li
-            className={activeTab === "addStudent" ? "active" : ""}
-            onClick={() => {
-              setActiveTab("addStudent");
-            }}
+            style={sidebarItemStyle("addStudent")}
+            onClick={() => setActiveTab("addStudent")}
           >
             ➕ Add Student
           </li>
           <li
-            className={activeTab === "addTeacher" ? "active" : ""}
-            onClick={() => {
-              setActiveTab("addTeacher");
-            }}
+            style={sidebarItemStyle("addTeacher")}
+            onClick={() => setActiveTab("addTeacher")}
           >
             ➕ Add Teacher
           </li>
-          <li className="logout">🚪 Logout</li>
+          <li style={{ ...styles.sidebarItem, ...styles.logout }}>🚪 Logout</li>
         </ul>
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
-        <h1 className="tab-title">{activeTab.toUpperCase()}</h1>
+      <div style={styles.mainContent}>
+        <h1 style={styles.tabTitle}>{activeTab.toUpperCase()}</h1>
 
         {activeTab === "dashboard" && renderDashboardCards()}
         {activeTab === "students" && renderStudentTable()}
