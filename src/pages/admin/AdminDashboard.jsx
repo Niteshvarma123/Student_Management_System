@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const styles = {
@@ -162,6 +162,18 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [hoveredCard, setHoveredCard] = useState(null); // ✅ new state
 
+  const [studentList, setStudentList] = useState([]);
+  useEffect(() => {
+    // fetch all students from backend once when AdminDashboard mounts
+    axios
+      .get("http://localhost:8080/student/all")
+      .then((res) => setStudentList(res.data || []))
+      .catch((err) => {
+        console.error("Failed to fetch students:", err);
+        setStudentList([]);
+      });
+  }, []); // empty array => runs once on mount
+
   // Student form state
   const [student, setStudent] = useState({
     srollno: "",
@@ -219,11 +231,11 @@ const AdminDashboard = () => {
     { title: "Pending Registrations", value: "3", desc: "New requests" },
   ];
 
-  const studentTable = [
-    { name: "Prudhvi", roll: "123", class: "10th", status: "Active" },
-    { name: "Rohit", roll: "124", class: "10th", status: "Active" },
-    { name: "Kavya", roll: "125", class: "9th", status: "Pending" },
-  ];
+  // const studentTable = [
+  //   { name: "Prudhvi", roll: "123", class: "10th", status: "Active" },
+  //   { name: "Rohit", roll: "124", class: "10th", status: "Active" },
+  //   { name: "Kavya", roll: "125", class: "9th", status: "Pending" },
+  // ];
 
   const teacherTable = [
     { name: "Kavya", empId: "T001", subject: "Math", status: "Active" },
@@ -264,32 +276,37 @@ const AdminDashboard = () => {
       <table style={styles.table}>
         <thead>
           <tr>
-            <th style={styles.th}>Name</th>
             <th style={styles.th}>Roll No</th>
-            <th style={styles.th}>Class</th>
-            <th style={styles.th}>Status</th>
-            <th style={styles.th}>Actions</th>
+            <th style={styles.th}>Name</th>
+            <th style={styles.th}>Email</th>
+            <th style={styles.th}>Phone</th>
+            <th style={styles.th}>Total Fee</th>
+            <th style={styles.th}>Paid</th>
+            <th style={styles.th}>Unpaid</th>
+            <th style={styles.th}>Address</th>
           </tr>
         </thead>
         <tbody>
-          {studentTable.map((s, idx) => (
-            <tr key={idx}>
-              <td style={styles.td}>{s.name}</td>
-              <td style={styles.td}>{s.roll}</td>
-              <td style={styles.td}>{s.class}</td>
-              <td style={styles.td}>{s.status}</td>
-              <td style={styles.td}>
-                <button style={{ ...styles.buttonBase, ...styles.editButton }}>
-                  Edit
-                </button>
-                <button
-                  style={{ ...styles.buttonBase, ...styles.deleteButton }}
-                >
-                  Delete
-                </button>
+          {studentList.length === 0 ? (
+            <tr>
+              <td style={styles.td} colSpan="8">
+                No students found.
               </td>
             </tr>
-          ))}
+          ) : (
+            studentList.map((stu) => (
+              <tr key={stu.id ?? stu.srollno}>
+                <td style={styles.td}>{stu.rollNo ?? stu.srollno}</td>
+                <td style={styles.td}>{stu.name ?? stu.sname}</td>
+                <td style={styles.td}>{stu.email ?? stu.semail}</td>
+                <td style={styles.td}>{stu.phone ?? stu.sphone}</td>
+                <td style={styles.td}>{stu.totalFee ?? stu.stotalfee}</td>
+                <td style={styles.td}>{stu.paid ?? stu.spaid}</td>
+                <td style={styles.td}>{stu.unpaid ?? stu.sunpaid}</td>
+                <td style={styles.td}>{stu.address ?? stu.saddress}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
