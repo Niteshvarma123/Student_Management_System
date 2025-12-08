@@ -185,7 +185,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8080/student/register",
+        "http://localhost:8080/student/add",
         student
       );
 
@@ -194,15 +194,15 @@ const AdminDashboard = () => {
 
       // reset form
       setStudent({
-        roll: "",
-        name: "",
-        email: "",
-        password: "",
-        phone: "",
-        totalFee: "",
-        paid: "",
-        unpaid: "",
-        address: "",
+        srollno: "",
+        sname: "",
+        semail: "",
+        spassword: "",
+        sphone: "",
+        stotalfee: "",
+        spaid: "",
+        sunpaid: "",
+        saddress: "",
       });
     } catch (err) {
       console.error(err);
@@ -339,83 +339,83 @@ const AdminDashboard = () => {
       <form style={styles.form} onSubmit={handleStudentSubmit}>
         <input
           type="number"
-          name="roll"
+          name="srollno"
           placeholder="Roll No"
           required
           style={styles.input}
-          value={student.roll}
+          value={student.srollno}
           onChange={handleStudentChange}
         />
         <input
           type="text"
-          name="name"
+          name="sname"
           placeholder="Name"
           required
           style={styles.input}
-          value={student.name}
+          value={student.sname}
           onChange={handleStudentChange}
         />
         <input
           type="email"
-          name="email"
+          name="semail"
           placeholder="Email"
           required
           style={styles.input}
-          value={student.email}
+          value={student.semail}
           onChange={handleStudentChange}
         />
         <input
           type="password"
-          name="password"
+          name="spassword"
           placeholder="Password"
           required
           style={styles.input}
-          value={student.password}
+          value={student.spassword}
           onChange={handleStudentChange}
         />
         <input
           type="number"
-          name="phone"
+          name="sphone"
           placeholder="Phone"
           required
           style={styles.input}
-          value={student.phone}
+          value={student.sphone}
           onChange={handleStudentChange}
         />
         <input
           type="number"
-          name="totalFee"
+          name="stotalfee"
           placeholder="Total Fee"
           required
           style={styles.input}
-          value={student.totalFee}
+          value={student.stotalfee}
           onChange={handleStudentChange}
         />
         <input
           type="number"
-          name="paid"
+          name="spaid"
           placeholder="Paid"
           required
           style={styles.input}
-          value={student.paid}
+          value={student.spaid}
           onChange={handleStudentChange}
         />
         <input
           type="number"
-          name="unpaid"
+          name="sunpaid"
           placeholder="Unpaid"
           required
           style={styles.input}
-          value={student.unpaid}
+          value={student.sunpaid}
           onChange={handleStudentChange}
         />
         <input
           type="text"
-          name="address"
+          name="saddress"
           placeholder="Address"
           required
           style={styles.input}
-          value={student.address}
+          value={student.saddress}
           onChange={handleStudentChange}
         />
 
