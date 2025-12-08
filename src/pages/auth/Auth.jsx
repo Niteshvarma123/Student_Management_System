@@ -74,8 +74,8 @@ export default function Auth() {
 function StudentForm({ cardStyle, btnLogin }) {
   const navigate = useNavigate();
   const [student, setStudent] = useState({
-    email: "",
-    password: "",
+    semail: "",
+    spassword: "",
   });
 
   const handleChange = (e) =>
@@ -86,12 +86,12 @@ function StudentForm({ cardStyle, btnLogin }) {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/student/login",
+        "http://localhost:8080/student/slogin",
         student
       );
 
       console.log("Student Login:", res.data);
-      alert("Student Login Successful!");
+      // alert("Student Login Successful!");
 
       navigate("/student/dashboard");
     } catch (err) {
@@ -107,19 +107,19 @@ function StudentForm({ cardStyle, btnLogin }) {
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          name="email"
+          name="semail"
           className="form-control mb-2"
           placeholder="Email"
-          value={student.email}
+          value={student.semail}
           onChange={handleChange}
         />
 
         <input
           type="password"
-          name="password"
+          name="spassword"
           className="form-control mb-2"
           placeholder="Password"
-          value={student.password}
+          value={student.spassword}
           onChange={handleChange}
         />
 
@@ -137,8 +137,8 @@ function StudentForm({ cardStyle, btnLogin }) {
 function TeacherForm({ cardStyle, btnLogin }) {
   const navigate = useNavigate();
   const [teacher, setTeacher] = useState({
-    email: "",
-    password: "",
+    temail: "",
+    tpassword: "",
   });
 
   const handleChange = (e) =>
@@ -149,12 +149,12 @@ function TeacherForm({ cardStyle, btnLogin }) {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/teacher/login",
+        "http://localhost:8080/auth/tlogin",
         teacher
       );
 
       console.log("Teacher Login:", res.data);
-      alert("Teacher Login Successful!");
+      // alert("Teacher Login Successful!");
 
       navigate("/teacher/dashboard");
     } catch (err) {
@@ -170,19 +170,19 @@ function TeacherForm({ cardStyle, btnLogin }) {
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          name="email"
+          name="temail"
           className="form-control mb-2"
           placeholder="Email"
-          value={teacher.email}
+          value={teacher.temail}
           onChange={handleChange}
         />
 
         <input
           type="password"
-          name="password"
+          name="tpassword"
           className="form-control mb-2"
           placeholder="Password"
-          value={teacher.password}
+          value={teacher.tpassword}
           onChange={handleChange}
         />
 
