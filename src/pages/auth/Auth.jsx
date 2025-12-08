@@ -6,14 +6,14 @@ export default function Auth() {
   const [activeTab, setActiveTab] = useState("student");
 
   const cardStyle = {
-    backgroundColor: "#FCE2C5", // Warm Sand
+    backgroundColor: "#FCE2C5",
     padding: "20px",
     borderRadius: "10px",
     boxShadow: "0 0 10px rgba(0,0,0,0.1)",
   };
 
   const buttonPrimary = {
-    backgroundColor: "#FF6F3C", // Solar Orange
+    backgroundColor: "#FF6F3C",
     borderColor: "#FF6F3C",
     color: "#F9F9F9",
   };
@@ -34,6 +34,7 @@ export default function Auth() {
             Student
           </button>
         </li>
+
         <li className="nav-item">
           <button
             className={`nav-link ${activeTab === "teacher" ? "active" : ""}`}
@@ -42,6 +43,7 @@ export default function Auth() {
             Teacher
           </button>
         </li>
+
         <li className="nav-item">
           <button
             className={`nav-link ${activeTab === "admin" ? "active" : ""}`}
@@ -54,18 +56,10 @@ export default function Auth() {
 
       {/* Tab Content */}
       {activeTab === "student" && (
-        <UserForm
-          type="Student"
-          cardStyle={cardStyle}
-          btnLogin={buttonPrimary}
-        />
+        <StudentForm cardStyle={cardStyle} btnLogin={buttonPrimary} />
       )}
       {activeTab === "teacher" && (
-        <UserForm
-          type="Teacher"
-          cardStyle={cardStyle}
-          btnLogin={buttonPrimary}
-        />
+        <TeacherForm cardStyle={cardStyle} btnLogin={buttonPrimary} />
       )}
       {activeTab === "admin" && (
         <AdminForm cardStyle={cardStyle} btnLogin={buttonPrimary} />
@@ -74,17 +68,61 @@ export default function Auth() {
   );
 }
 
-function UserForm({ type, cardStyle, btnLogin }) {
+/* ===============================
+      STUDENT LOGIN FORM 
+================================ */
+function StudentForm({ cardStyle, btnLogin }) {
+  const navigate = useNavigate();
+  const [student, setStudent] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) =>
+    setStudent({ ...student, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/student/login",
+        student
+      );
+
+      console.log("Student Login:", res.data);
+      alert("Student Login Successful!");
+
+      navigate("/student/dashboard");
+    } catch (err) {
+      alert("Student Login Failed!");
+      console.error(err);
+    }
+  };
+
   return (
     <div style={cardStyle}>
-      <h5>{type} Login</h5>
-      <form className="mb-3">
-        <input type="email" className="form-control mb-2" placeholder="Email" />
+      <h5>Student Login</h5>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          className="form-control mb-2"
+          placeholder="Email"
+          value={student.email}
+          onChange={handleChange}
+        />
+
         <input
           type="password"
+          name="password"
           className="form-control mb-2"
           placeholder="Password"
+          value={student.password}
+          onChange={handleChange}
         />
+
         <button className="btn w-100" style={btnLogin}>
           Login
         </button>
@@ -93,34 +131,93 @@ function UserForm({ type, cardStyle, btnLogin }) {
   );
 }
 
-// Admin form
+/* ===============================
+      TEACHER LOGIN FORM 
+================================ */
+function TeacherForm({ cardStyle, btnLogin }) {
+  const navigate = useNavigate();
+  const [teacher, setTeacher] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) =>
+    setTeacher({ ...teacher, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/teacher/login",
+        teacher
+      );
+
+      console.log("Teacher Login:", res.data);
+      alert("Teacher Login Successful!");
+
+      navigate("/teacher/dashboard");
+    } catch (err) {
+      alert("Teacher Login Failed!");
+      console.error(err);
+    }
+  };
+
+  return (
+    <div style={cardStyle}>
+      <h5>Teacher Login</h5>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          className="form-control mb-2"
+          placeholder="Email"
+          value={teacher.email}
+          onChange={handleChange}
+        />
+
+        <input
+          type="password"
+          name="password"
+          className="form-control mb-2"
+          placeholder="Password"
+          value={teacher.password}
+          onChange={handleChange}
+        />
+
+        <button className="btn w-100" style={btnLogin}>
+          Login
+        </button>
+      </form>
+    </div>
+  );
+}
+
+/* ===============================
+          ADMIN LOGIN FORM 
+================================ */
 function AdminForm({ cardStyle, btnLogin }) {
+  const navigate = useNavigate();
+
   const [admin, setAdmin] = useState({
     adminemail: "",
     adminpassword: "",
   });
 
-  const navigate = useNavigate(); // ⭐ Needed for redirect
-
-  const handleChange = (e) => {
-    setAdmin({
-      ...admin,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const handleChange = (e) =>
+    setAdmin({ ...admin, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const res = await axios.post("http://localhost:8080/auth/login", admin);
 
-      // alert("Admin Login Successful!");
-      console.log(res.data);
+      console.log("Admin Login:", res.data);
+      alert("Admin Login Successful!");
 
-      // Example: Save token if needed
-      // localStorage.setItem("adminToken", res.data.token);
-
-      navigate("/admin/dashboard"); // ⭐ Redirect after success
+      navigate("/admin/dashboard");
     } catch (err) {
       alert("Admin Login Failed!");
       console.error(err);
@@ -130,6 +227,7 @@ function AdminForm({ cardStyle, btnLogin }) {
   return (
     <div style={cardStyle}>
       <h5>Admin Login</h5>
+
       <form onSubmit={handleSubmit}>
         <input
           type="email"
