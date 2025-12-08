@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const styles = {
   dashboard: {
@@ -161,6 +162,53 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [hoveredCard, setHoveredCard] = useState(null); // ✅ new state
 
+  // Student form state
+  const [student, setStudent] = useState({
+    srollno: "",
+    sname: "",
+    semail: "",
+    spassword: "",
+    sphone: "",
+    stotalFee: "",
+    spaid: "",
+    sunpaid: "",
+    saddress: "",
+  });
+
+  // Handle input changes
+  const handleStudentChange = (e) => {
+    setStudent({ ...student, [e.target.name]: e.target.value });
+  };
+
+  // Submit student register form
+  const handleStudentSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/student/register",
+        student
+      );
+
+      alert("Student Registered Successfully!");
+      console.log(res.data);
+
+      // reset form
+      setStudent({
+        roll: "",
+        name: "",
+        email: "",
+        password: "",
+        phone: "",
+        totalFee: "",
+        paid: "",
+        unpaid: "",
+        address: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to register student");
+    }
+  };
 
   const dashboardCards = [
     { title: "Total Students", value: "250", desc: "Registered students" },
@@ -182,7 +230,7 @@ const AdminDashboard = () => {
     { name: "Ramesh", empId: "T002", subject: "Science", status: "Active" },
   ];
 
-   const renderDashboardCards = () => (
+  const renderDashboardCards = () => (
     <div style={styles.cardsContainer}>
       {dashboardCards.map((card, index) => {
         const isHovered = hoveredCard === index;
@@ -210,8 +258,6 @@ const AdminDashboard = () => {
     </div>
   );
 
-
-
   const renderStudentTable = () => (
     <div style={styles.tableContainer}>
       <h2>Students</h2>
@@ -233,9 +279,7 @@ const AdminDashboard = () => {
               <td style={styles.td}>{s.class}</td>
               <td style={styles.td}>{s.status}</td>
               <td style={styles.td}>
-                <button
-                  style={{ ...styles.buttonBase, ...styles.editButton }}
-                >
+                <button style={{ ...styles.buttonBase, ...styles.editButton }}>
                   Edit
                 </button>
                 <button
@@ -272,9 +316,7 @@ const AdminDashboard = () => {
               <td style={styles.td}>{t.subject}</td>
               <td style={styles.td}>{t.status}</td>
               <td style={styles.td}>
-                <button
-                  style={{ ...styles.buttonBase, ...styles.editButton }}
-                >
+                <button style={{ ...styles.buttonBase, ...styles.editButton }}>
                   Edit
                 </button>
                 <button
@@ -293,16 +335,90 @@ const AdminDashboard = () => {
   const renderAddStudentForm = () => (
     <div style={styles.formCard}>
       <h2>Add Student</h2>
-      <form style={styles.form}>
-        <input type="number" placeholder="Roll No" required style={styles.input} />
-        <input type="text" placeholder="Name" required style={styles.input} />
-        <input type="email" placeholder="Email" required style={styles.input} />
-        <input type="password" placeholder="Password" required style={styles.input} />
-        <input type="number" placeholder="Phone" required style={styles.input} />
-        <input type="number" placeholder="Total Fee" required style={styles.input} />
-        <input type="number" placeholder="Paid" required style={styles.input} />
-        <input type="number" placeholder="Unpaid" required style={styles.input} />
-        <input type="text" placeholder="Address" required style={styles.input} />
+
+      <form style={styles.form} onSubmit={handleStudentSubmit}>
+        <input
+          type="number"
+          name="roll"
+          placeholder="Roll No"
+          required
+          style={styles.input}
+          value={student.roll}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          required
+          style={styles.input}
+          value={student.name}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          style={styles.input}
+          value={student.email}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+          style={styles.input}
+          value={student.password}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="number"
+          name="phone"
+          placeholder="Phone"
+          required
+          style={styles.input}
+          value={student.phone}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="number"
+          name="totalFee"
+          placeholder="Total Fee"
+          required
+          style={styles.input}
+          value={student.totalFee}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="number"
+          name="paid"
+          placeholder="Paid"
+          required
+          style={styles.input}
+          value={student.paid}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="number"
+          name="unpaid"
+          placeholder="Unpaid"
+          required
+          style={styles.input}
+          value={student.unpaid}
+          onChange={handleStudentChange}
+        />
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          required
+          style={styles.input}
+          value={student.address}
+          onChange={handleStudentChange}
+        />
+
         <button type="submit" style={styles.formButton}>
           Add Student
         </button>
@@ -321,7 +437,12 @@ const AdminDashboard = () => {
           required
           style={styles.input}
         />
-        <input type="text" placeholder="Subject" required style={styles.input} />
+        <input
+          type="text"
+          placeholder="Subject"
+          required
+          style={styles.input}
+        />
         <input type="email" placeholder="Email" required style={styles.input} />
         <input
           type="password"
