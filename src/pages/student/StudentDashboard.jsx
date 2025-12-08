@@ -1,12 +1,20 @@
 // StudentDashboard.jsx
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Button, ProgressBar } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  ProgressBar,
+} from "react-bootstrap";
 
 export default function StudentDashboard() {
-  const [activeSection, setActiveSection] = useState("dashboard"); 
+  const [activeSection, setActiveSection] = useState("dashboard");
   // 'dashboard' | 'courses' | 'attendance' | 'marks' | 'payments' | 'profile'
 
   /** LAYOUT & SIDEBAR STYLES **/
+  const userName = localStorage.getItem("userName") || "User";
 
   const layoutStyle = {
     display: "flex",
@@ -17,15 +25,15 @@ export default function StudentDashboard() {
   };
 
   const sidebarStyle = {
-  width: 230,
-  background: "linear-gradient(180deg, #9C27FF 0%, #7C4DFF 100%)",
-  color: "#FFFFFF",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  padding: "24px 18px",
-  fontFamily: "Inter, sans-serif",   // Smooth clean font
-};
+    width: 230,
+    background: "linear-gradient(180deg, #9C27FF 0%, #7C4DFF 100%)",
+    color: "#FFFFFF",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "24px 18px",
+    fontFamily: "Inter, sans-serif", // Smooth clean font
+  };
 
   const sidebarTopStyle = {
     display: "flex",
@@ -45,24 +53,24 @@ export default function StudentDashboard() {
   };
 
   const sidebarItemStyle = (isActive) => ({
-  padding: "12px 14px",
-  borderRadius: 12,
-  fontSize: "0.92rem",
-  fontWeight: isActive ? 600 : 400,
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  gap: 12,
-  color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
-  background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
-  transition: "all 0.25s ease",
-  letterSpacing: "0.3px",
-});
-const iconStyle = (isActive) => ({
-  fontSize: "1.05rem",
-  color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
-  transition: "0.2s ease",
-});
+    padding: "12px 14px",
+    borderRadius: 12,
+    fontSize: "0.92rem",
+    fontWeight: isActive ? 600 : 400,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
+    background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
+    transition: "all 0.25s ease",
+    letterSpacing: "0.3px",
+  });
+  const iconStyle = (isActive) => ({
+    fontSize: "1.05rem",
+    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
+    transition: "0.2s ease",
+  });
 
   const bulletStyle = {
     width: 6,
@@ -92,7 +100,7 @@ const iconStyle = (isActive) => ({
     paddingBottom: 32,
     paddingLeft: 24,
     paddingRight: 24,
-    width: "100%",        // main takes all remaining width
+    width: "100%", // main takes all remaining width
   };
 
   const headerRowStyle = {
@@ -284,7 +292,10 @@ const iconStyle = (isActive) => ({
                 <span>Object Oriented Programming</span>
                 <span>CSE201</span>
                 <span>
-                  <ProgressBar now={72} style={{ height: 6, borderRadius: 999 }} />
+                  <ProgressBar
+                    now={72}
+                    style={{ height: 6, borderRadius: 999 }}
+                  />
                 </span>
               </div>
 
@@ -292,7 +303,11 @@ const iconStyle = (isActive) => ({
                 <span>Database Management Systems</span>
                 <span>CSE210</span>
                 <span>
-                  <ProgressBar now={54} variant="info" style={{ height: 6, borderRadius: 999 }} />
+                  <ProgressBar
+                    now={54}
+                    variant="info"
+                    style={{ height: 6, borderRadius: 999 }}
+                  />
                 </span>
               </div>
 
@@ -300,7 +315,11 @@ const iconStyle = (isActive) => ({
                 <span>Discrete Mathematics</span>
                 <span>MTH205</span>
                 <span>
-                  <ProgressBar now={88} variant="success" style={{ height: 6, borderRadius: 999 }} />
+                  <ProgressBar
+                    now={88}
+                    variant="success"
+                    style={{ height: 6, borderRadius: 999 }}
+                  />
                 </span>
               </div>
             </div>
@@ -353,7 +372,9 @@ const iconStyle = (isActive) => ({
                 <span>OOP</span>
                 <span>Mid Term</span>
                 <span>
-                  <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>86 / 100</span>
+                  <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
+                    86 / 100
+                  </span>
                 </span>
               </div>
 
@@ -361,7 +382,9 @@ const iconStyle = (isActive) => ({
                 <span>DBMS</span>
                 <span>Unit Test</span>
                 <span>
-                  <span style={chipStyle("rgba(59,130,246,0.1)", "#1D4ED8")}>78 / 100</span>
+                  <span style={chipStyle("rgba(59,130,246,0.1)", "#1D4ED8")}>
+                    78 / 100
+                  </span>
                 </span>
               </div>
 
@@ -369,7 +392,9 @@ const iconStyle = (isActive) => ({
                 <span>Discrete Maths</span>
                 <span>Mid Term</span>
                 <span>
-                  <span style={chipStyle("rgba(251,191,36,0.1)", "#B45309")}>Pending</span>
+                  <span style={chipStyle("rgba(251,191,36,0.1)", "#B45309")}>
+                    Pending
+                  </span>
                 </span>
               </div>
             </div>
@@ -503,21 +528,27 @@ const iconStyle = (isActive) => ({
             <div style={statCardStyle}>
               <span style={statLabelStyle}>Credits Completed</span>
               <span style={statValueStyle}>96</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>24 remaining</span>
+              <span style={{ ...smallMutedText, marginTop: 4 }}>
+                24 remaining
+              </span>
             </div>
           </Col>
           <Col md={3} sm={6}>
             <div style={statCardStyle}>
               <span style={statLabelStyle}>Attendance</span>
               <span style={statValueStyle}>92%</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>Above minimum</span>
+              <span style={{ ...smallMutedText, marginTop: 4 }}>
+                Above minimum
+              </span>
             </div>
           </Col>
           <Col md={3} sm={6}>
             <div style={statCardStyle}>
               <span style={statLabelStyle}>Fee Pending</span>
               <span style={statValueStyle}>₹ 20K</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>Due next month</span>
+              <span style={{ ...smallMutedText, marginTop: 4 }}>
+                Due next month
+              </span>
             </div>
           </Col>
         </Row>
@@ -573,7 +604,9 @@ const iconStyle = (isActive) => ({
               <div style={listItemRow}>
                 <div>
                   <div style={listTitle}>Holiday</div>
-                  <div style={smallMutedText}>15th August – Independence Day</div>
+                  <div style={smallMutedText}>
+                    15th August – Independence Day
+                  </div>
                 </div>
               </div>
             </div>
@@ -597,42 +630,49 @@ const iconStyle = (isActive) => ({
             </div>
           </div>
 
-          <div style={{  display: "flex", flexDirection: "column", gap: 8, marginTop: 20 }}>
-           <div
-    style={sidebarItemStyle(activeSection === "dashboard")}
-    onClick={() => setActiveSection("dashboard")}
-  >
-    <span style={iconStyle(activeSection === "dashboard")}>🧭</span>
-    <span>Dashboard</span>
-  </div>
-           <div
-    style={sidebarItemStyle(activeSection === "courses")}
-    onClick={() => setActiveSection("courses")}
-  >
-    <span style={iconStyle(activeSection === "courses")}>📄</span>
-    <span>Courses</span>
-  </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              marginTop: 20,
+            }}
+          >
+            <div
+              style={sidebarItemStyle(activeSection === "dashboard")}
+              onClick={() => setActiveSection("dashboard")}
+            >
+              <span style={iconStyle(activeSection === "dashboard")}>🧭</span>
+              <span>Dashboard</span>
+            </div>
+            <div
+              style={sidebarItemStyle(activeSection === "courses")}
+              onClick={() => setActiveSection("courses")}
+            >
+              <span style={iconStyle(activeSection === "courses")}>📄</span>
+              <span>Courses</span>
+            </div>
             <div
               style={sidebarItemStyle(activeSection === "attendance")}
               onClick={() => setActiveSection("attendance")}
             >
-              <span style={iconStyle(activeSection ==="attendance")}>📆</span>
+              <span style={iconStyle(activeSection === "attendance")}>📆</span>
               <span>Attendance</span>
             </div>
-           <div
-    style={sidebarItemStyle(activeSection === "marks")}
-    onClick={() => setActiveSection("marks")}
-  >
-    <span style={iconStyle(activeSection === "marks")}>📊</span>
-    <span>Marks</span>
-  </div>
             <div
-    style={sidebarItemStyle(activeSection === "payments")}
-    onClick={() => setActiveSection("payments")}
-  >
-    <span style={iconStyle(activeSection === "payments")}>💰</span>
-    <span>Payment Info</span>
-  </div>
+              style={sidebarItemStyle(activeSection === "marks")}
+              onClick={() => setActiveSection("marks")}
+            >
+              <span style={iconStyle(activeSection === "marks")}>📊</span>
+              <span>Marks</span>
+            </div>
+            <div
+              style={sidebarItemStyle(activeSection === "payments")}
+              onClick={() => setActiveSection("payments")}
+            >
+              <span style={iconStyle(activeSection === "payments")}>💰</span>
+              <span>Payment Info</span>
+            </div>
             <div
               style={sidebarItemStyle(activeSection === "profile")}
               onClick={() => setActiveSection("profile")}
@@ -657,7 +697,7 @@ const iconStyle = (isActive) => ({
             {/* Banner */}
             <div style={bannerStyle}>
               <div>
-                <p style={bannerTitleStyle}>Welcome back, John!</p>
+                <p style={bannerTitleStyle}>Welcome Back, {userName}!</p>
                 <p style={bannerSubtitleStyle}>
                   Here’s a quick snapshot of your academics today.
                 </p>
@@ -669,7 +709,8 @@ const iconStyle = (isActive) => ({
             <div>
               <p style={titleStyle}>Student Dashboard</p>
               <p style={subtitleStyle}>
-                Track your CGPA, attendance, courses, marks, and fee status in one place.
+                Track your CGPA, attendance, courses, marks, and fee status in
+                one place.
               </p>
             </div>
           </div>
