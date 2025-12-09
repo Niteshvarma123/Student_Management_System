@@ -221,6 +221,13 @@ const AdminDashboard = () => {
       alert("Failed to register student");
     }
   };
+  const handleEdit = (student) => {
+    console.log("Edit clicked:", student);
+  };
+
+  const handleDelete = (student) => {
+    console.log("Delete clicked:", student);
+  };
 
   const dashboardCards = [
     { title: "Total Students", value: "250", desc: "Registered students" },
@@ -284,12 +291,13 @@ const AdminDashboard = () => {
             <th style={styles.th}>Paid</th>
             <th style={styles.th}>Unpaid</th>
             <th style={styles.th}>Address</th>
+            <th style={styles.th}>Actions</th> {/* NEW */}
           </tr>
         </thead>
         <tbody>
           {studentList.length === 0 ? (
             <tr>
-              <td style={styles.td} colSpan="8">
+              <td style={styles.td} colSpan="9">
                 No students found.
               </td>
             </tr>
@@ -304,6 +312,12 @@ const AdminDashboard = () => {
                 <td style={styles.td}>{stu.paid ?? stu.spaid}</td>
                 <td style={styles.td}>{stu.unpaid ?? stu.sunpaid}</td>
                 <td style={styles.td}>{stu.address ?? stu.saddress}</td>
+
+                {/* NEW BUTTONS */}
+                <td style={styles.td}>
+                  <button onClick={() => handleEdit(stu)}>Edit</button>
+                  <button onClick={() => handleDelete(stu)}>Delete</button>
+                </td>
               </tr>
             ))
           )}
