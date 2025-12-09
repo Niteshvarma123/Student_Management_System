@@ -221,12 +221,63 @@ const AdminDashboard = () => {
       alert("Failed to register student");
     }
   };
-  const handleEdit = (student) => {
-    console.log("Edit clicked:", student);
+  // Student Table dynamic changes
+
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/students");
+      setStudentList(res.data);
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
+    }
   };
 
-  const handleDelete = (student) => {
-    console.log("Delete clicked:", student);
+  // Fetch once on page load
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  // ✅ DELETE student
+  const handleDelete = async (student) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/students/${student.id ?? student.srollno}`
+      );
+      alert("Student deleted successfully");
+
+      // Refresh student list
+      fetchStudents();
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Failed to delete student");
+    }
+  };
+
+  // ✅ EDIT student (example structure, you will add modal later)
+  const handleEdit = async (student) => {
+    const updatedData = {
+      name: student.name ?? student.sname,
+      email: student.email ?? student.semail,
+      phone: student.phone ?? student.sphone,
+      totalFee: student.totalFee ?? student.stotalfee,
+      paid: student.paid ?? student.spaid,
+      unpaid: student.unpaid ?? student.sunpaid,
+      address: student.address ?? student.saddress,
+    };
+
+    try {
+      await axios.put(
+        `http://localhost:8080/students/${student.id ?? student.srollno}`,
+        updatedData
+      );
+      alert("Student updated!");
+
+      // Refresh after update
+      fetchStudents();
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Failed to update student");
+    }
   };
 
   const dashboardCards = [
@@ -280,6 +331,7 @@ const AdminDashboard = () => {
   const renderStudentTable = () => (
     <div style={styles.tableContainer}>
       <h2>Students</h2>
+
       <table style={styles.table}>
         <thead>
           <tr>
@@ -291,9 +343,10 @@ const AdminDashboard = () => {
             <th style={styles.th}>Paid</th>
             <th style={styles.th}>Unpaid</th>
             <th style={styles.th}>Address</th>
-            <th style={styles.th}>Actions</th> {/* NEW */}
+            <th style={styles.th}>Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {studentList.length === 0 ? (
             <tr>
@@ -313,7 +366,7 @@ const AdminDashboard = () => {
                 <td style={styles.td}>{stu.unpaid ?? stu.sunpaid}</td>
                 <td style={styles.td}>{stu.address ?? stu.saddress}</td>
 
-                {/* NEW BUTTONS */}
+                {/* EDIT + DELETE BUTTONS */}
                 <td style={styles.td}>
                   <button onClick={() => handleEdit(stu)}>Edit</button>
                   <button onClick={() => handleDelete(stu)}>Delete</button>
