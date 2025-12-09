@@ -215,7 +215,7 @@ function AdminForm({ cardStyle, btnLogin }) {
       const res = await axios.post("http://localhost:8080/auth/login", admin);
 
       console.log("Admin Login:", res.data);
-      alert("Admin Login Successful!");
+      // alert("Admin Login Successful!");
 
       navigate("/admin/dashboard");
     } catch (err) {
