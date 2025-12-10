@@ -226,7 +226,7 @@ const AdminDashboard = () => {
   const handleDelete = async (stu) => {
     try {
       await axios.delete(
-        `http://localhost:8080/students/${stu.id ?? stu.srollno}`
+        `http://localhost:8080/student/delete/${stu.srollno}`
       );
       alert("Student deleted successfully");
       fetchStudents();
