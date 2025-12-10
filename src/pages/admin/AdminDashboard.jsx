@@ -162,19 +162,8 @@ const styles = {
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [hoveredCard, setHoveredCard] = useState(null); // ✅ new state
-
+  const [hoveredCard, setHoveredCard] = useState(null);
   const [studentList, setStudentList] = useState([]);
-  useEffect(() => {
-    // fetch all students from backend once when AdminDashboard mounts
-    axios
-      .get("http://localhost:8080/student/all")
-      .then((res) => setStudentList(res.data || []))
-      .catch((err) => {
-        console.error("Failed to fetch students:", err);
-        setStudentList([]);
-      });
-  }, []); // empty array => runs once on mount
 
   // Student form state
   const [student, setStudent] = useState({
@@ -183,30 +172,38 @@ const AdminDashboard = () => {
     semail: "",
     spassword: "",
     sphone: "",
-    stotalFee: "",
+    stotalfee: "",
     spaid: "",
     sunpaid: "",
     saddress: "",
   });
 
-  // Handle input changes
+  // Fetch all students
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/students");
+      setStudentList(res.data || []);
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
+      setStudentList([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  // Handle input change
   const handleStudentChange = (e) => {
     setStudent({ ...student, [e.target.name]: e.target.value });
   };
 
-  // Submit student register form
+  // Add student
   const handleStudentSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:8080/student/add",
-        student
-      );
-
+      await axios.post("http://localhost:8080/student/add", student);
       alert("Student Registered Successfully!");
-      console.log(res.data);
-
-      // reset form
       setStudent({
         srollno: "",
         sname: "",
@@ -218,36 +215,20 @@ const AdminDashboard = () => {
         sunpaid: "",
         saddress: "",
       });
+      fetchStudents(); // refresh table
     } catch (err) {
       console.error(err);
       alert("Failed to register student");
     }
   };
-  // Student Table dynamic changes
 
-  const fetchStudents = async () => {
-    try {
-      const res = await axios.get("http://localhost:8080/students");
-      setStudentList(res.data);
-    } catch (error) {
-      console.error("Failed to fetch students:", error);
-    }
-  };
-
-  // Fetch once on page load
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  // ✅ DELETE student
-  const handleDelete = async (student) => {
+  // Delete student
+  const handleDelete = async (stu) => {
     try {
       await axios.delete(
-        `http://localhost:8080/students/${student.id ?? student.srollno}`
+        `http://localhost:8080/students/${stu.id ?? stu.srollno}`
       );
       alert("Student deleted successfully");
-
-      // Refresh student list
       fetchStudents();
     } catch (error) {
       console.error("Delete failed:", error);
@@ -255,24 +236,18 @@ const AdminDashboard = () => {
     }
   };
 
-  // ✅ EDIT student (example structure, you will add modal later)
-
-  // Teacher table updates
-
   const dashboardCards = [
-    { title: "Total Students", value: "250", desc: "Registered students" },
+    {
+      title: "Total Students",
+      value: studentList.length,
+      desc: "Registered students",
+    },
     { title: "Total Teachers", value: "20", desc: "Registered teachers" },
-    { title: "Classes", value: "12", desc: "Active9; classes" },
+    { title: "Classes", value: "12", desc: "Active classes" },
     { title: "Fees Collected", value: student.spaid, desc: "This semester" },
     { title: "Attendance Avg", value: "88%", desc: "Overall" },
     { title: "Pending Registrations", value: "3", desc: "New requests" },
   ];
-
-  // const studentTable = [
-  //   { name: "Prudhvi", roll: "123", class: "10th", status: "Active" },
-  //   { name: "Rohit", roll: "124", class: "10th", status: "Active" },
-  //   { name: "Kavya", roll: "125", class: "9th", status: "Pending" },
-  // ];
 
   const teacherTable = [
     { name: "Kavya", empId: "T001", subject: "Math", status: "Active" },
@@ -283,7 +258,6 @@ const AdminDashboard = () => {
     <div style={styles.cardsContainer}>
       {dashboardCards.map((card, index) => {
         const isHovered = hoveredCard === index;
-
         return (
           <div
             key={index}
@@ -293,7 +267,6 @@ const AdminDashboard = () => {
               boxShadow: isHovered
                 ? "0 8px 20px rgba(0,0,0,0.2)"
                 : "0 4px 12px rgba(0,0,0,0.1)",
-              transition: "0.3s",
             }}
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}
@@ -310,7 +283,6 @@ const AdminDashboard = () => {
   const renderStudentTable = () => (
     <div style={styles.tableContainer}>
       <h2>Students</h2>
-
       <table style={styles.table}>
         <thead>
           <tr>
@@ -325,7 +297,6 @@ const AdminDashboard = () => {
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
-
         <tbody>
           {studentList.length === 0 ? (
             <tr>
@@ -344,8 +315,6 @@ const AdminDashboard = () => {
                 <td style={styles.td}>{stu.paid ?? stu.spaid}</td>
                 <td style={styles.td}>{stu.unpaid ?? stu.sunpaid}</td>
                 <td style={styles.td}>{stu.address ?? stu.saddress}</td>
-
-                {/* EDIT + DELETE BUTTONS */}
                 <td style={styles.td}>
                   <button
                     style={{ ...styles.buttonBase, ...styles.editButton }}
@@ -355,7 +324,6 @@ const AdminDashboard = () => {
                   >
                     Edit
                   </button>
-
                   <button
                     style={{ ...styles.buttonBase, ...styles.deleteButton }}
                     onClick={() => handleDelete(stu)}
@@ -411,90 +379,31 @@ const AdminDashboard = () => {
   const renderAddStudentForm = () => (
     <div style={styles.formCard}>
       <h2>Add Student</h2>
-
       <form style={styles.form} onSubmit={handleStudentSubmit}>
-        <input
-          type="number"
-          name="srollno"
-          placeholder="Roll No"
-          required
-          style={styles.input}
-          value={student.srollno}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="text"
-          name="sname"
-          placeholder="Name"
-          required
-          style={styles.input}
-          value={student.sname}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="email"
-          name="semail"
-          placeholder="Email"
-          required
-          style={styles.input}
-          value={student.semail}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="password"
-          name="spassword"
-          placeholder="Password"
-          required
-          style={styles.input}
-          value={student.spassword}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="number"
-          name="sphone"
-          placeholder="Phone"
-          required
-          style={styles.input}
-          value={student.sphone}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="number"
-          name="stotalfee"
-          placeholder="Total Fee"
-          required
-          style={styles.input}
-          value={student.stotalfee}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="number"
-          name="spaid"
-          placeholder="Paid"
-          required
-          style={styles.input}
-          value={student.spaid}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="number"
-          name="sunpaid"
-          placeholder="Unpaid"
-          required
-          style={styles.input}
-          value={student.sunpaid}
-          onChange={handleStudentChange}
-        />
-        <input
-          type="text"
-          name="saddress"
-          placeholder="Address"
-          required
-          style={styles.input}
-          value={student.saddress}
-          onChange={handleStudentChange}
-        />
-
+        {Object.keys(student).map((key) => (
+          <input
+            key={key}
+            type={
+              key.toLowerCase().includes("email")
+                ? "email"
+                : key.toLowerCase().includes("password")
+                ? "password"
+                : key.toLowerCase().includes("phone") ||
+                  key.toLowerCase().includes("roll") ||
+                  key.toLowerCase().includes("fee") ||
+                  key.toLowerCase().includes("paid") ||
+                  key.toLowerCase().includes("unpaid")
+                ? "number"
+                : "text"
+            }
+            name={key}
+            placeholder={key}
+            required
+            style={styles.input}
+            value={student[key]}
+            onChange={handleStudentChange}
+          />
+        ))}
         <button type="submit" style={styles.formButton}>
           Add Student
         </button>
@@ -546,7 +455,6 @@ const AdminDashboard = () => {
 
   return (
     <div style={styles.dashboard}>
-      {/* Sidebar */}
       <div style={styles.sidebar}>
         <h2 style={styles.logo}>Admin</h2>
         <ul style={styles.sidebarList}>
@@ -584,10 +492,8 @@ const AdminDashboard = () => {
         </ul>
       </div>
 
-      {/* Main Content */}
       <div style={styles.mainContent}>
         <h1 style={styles.tabTitle}>{activeTab.toUpperCase()}</h1>
-
         {activeTab === "dashboard" && renderDashboardCards()}
         {activeTab === "students" && renderStudentTable()}
         {activeTab === "teachers" && renderTeacherTable()}
