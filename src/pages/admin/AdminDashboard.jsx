@@ -267,7 +267,7 @@ const AdminDashboard = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/students/${student.id ?? student.srollno}`,
+        `http://localhost:8080/update/${student.id}`,
         updatedData
       );
       alert("Student updated!");
