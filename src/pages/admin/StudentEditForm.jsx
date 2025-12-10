@@ -9,6 +9,7 @@ export default function StudentEditForm() {
   const [student, setStudent] = useState({
     sname: "",
     semail: "",
+    spassword:"",
     sphone: "",
     stotalfee: "",
     spaid: "",
@@ -69,6 +70,17 @@ export default function StudentEditForm() {
             placeholder="Email"
             style={styles.input}
             type="email"
+            required
+          />
+
+          <label>Password</label>
+          <input
+            name="spassword"
+            value={student.spassword}
+            onChange={handleChange}
+            placeholder="password"
+            style={styles.input}
+            type="password"
             required
           />
 
