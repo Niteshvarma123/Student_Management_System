@@ -324,6 +324,7 @@ const AdminDashboard = () => {
                   >
                     Edit
                   </button>
+
                   <button
                     style={{ ...styles.buttonBase, ...styles.deleteButton }}
                     onClick={() => handleDelete(stu)}
