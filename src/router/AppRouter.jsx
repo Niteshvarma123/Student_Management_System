@@ -10,6 +10,7 @@ import About from "../pages/about/Aboutus.jsx";
 
 import StudentDashboard from "../pages/student/StudentDashboard.jsx";
 import TeacherDashboard from "../pages/teacher/TeacherDashboard.jsx";
+import StudentEditForm from "../pages/admin/StudentEditForm.jsx";
 
 export default function AppRouter() {
   return (
@@ -30,6 +31,7 @@ export default function AppRouter() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route path="/student/dashboard" element={<StudentDashboard />} />
+            <Route path="/edit/student" element={<StudentEditForm />} />
           </Routes>
         </div>
 

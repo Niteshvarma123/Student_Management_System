@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   dashboard: {
@@ -159,6 +160,7 @@ const styles = {
 };
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [hoveredCard, setHoveredCard] = useState(null); // ✅ new state
 
@@ -254,37 +256,14 @@ const AdminDashboard = () => {
   };
 
   // ✅ EDIT student (example structure, you will add modal later)
-  const handleEdit = async (student) => {
-    const updatedData = {
-      name: student.name ?? student.sname,
-      email: student.email ?? student.semail,
-      phone: student.phone ?? student.sphone,
-      totalFee: student.totalFee ?? student.stotalfee,
-      paid: student.paid ?? student.spaid,
-      unpaid: student.unpaid ?? student.sunpaid,
-      address: student.address ?? student.saddress,
-    };
 
-    try {
-      await axios.put(
-        `http://localhost:8080/students/${student.id ?? student.srollno}`,
-        updatedData
-      );
-      alert("Student updated!");
-
-      // Refresh after update
-      fetchStudents();
-    } catch (error) {
-      console.error("Update failed:", error);
-      alert("Failed to update student");
-    }
-  };
+  // Teacher table updates
 
   const dashboardCards = [
     { title: "Total Students", value: "250", desc: "Registered students" },
     { title: "Total Teachers", value: "20", desc: "Registered teachers" },
-    { title: "Classes", value: "12", desc: "Active classes" },
-    { title: "Fees Collected", value: "₹5,00,000", desc: "This semester" },
+    { title: "Classes", value: "12", desc: "Active9; classes" },
+    { title: "Fees Collected", value: student.spaid, desc: "This semester" },
     { title: "Attendance Avg", value: "88%", desc: "Overall" },
     { title: "Pending Registrations", value: "3", desc: "New requests" },
   ];
@@ -368,8 +347,21 @@ const AdminDashboard = () => {
 
                 {/* EDIT + DELETE BUTTONS */}
                 <td style={styles.td}>
-                  <button onClick={() => handleEdit(stu)}>Edit</button>
-                  <button onClick={() => handleDelete(stu)}>Delete</button>
+                  <button
+                    style={{ ...styles.buttonBase, ...styles.editButton }}
+                    onClick={() =>
+                      navigate(`/edit/student/${stu.id ?? stu.srollno}`)
+                    }
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    style={{ ...styles.buttonBase, ...styles.deleteButton }}
+                    onClick={() => handleDelete(stu)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))
