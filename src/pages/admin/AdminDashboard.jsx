@@ -181,7 +181,7 @@ const AdminDashboard = () => {
   // Fetch all students
   const fetchStudents = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/students");
+      const res = await axios.get("http://localhost:8080/student/all");
       setStudentList(res.data || []);
     } catch (error) {
       console.error("Failed to fetch students:", error);

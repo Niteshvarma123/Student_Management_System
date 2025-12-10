@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function StudentEditForm() {
-  const { id } = useParams();
+  const { srollno} = useParams();
   const navigate = useNavigate();
 
   const [student, setStudent] = useState({
@@ -19,10 +19,10 @@ export default function StudentEditForm() {
   // ------------ FETCH STUDENT BY ID -------------
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/students/${id}`)
+      .get(`http://localhost:8080/student/update/${srollno}`)
       .then((res) => setStudent(res.data))
       .catch(() => alert("Failed to load student"));
-  }, [id]);
+  }, [srollno]);
 
   const handleChange = (e) => {
     setStudent({ ...student, [e.target.name]: e.target.value });
@@ -34,14 +34,14 @@ export default function StudentEditForm() {
 
     try {
       // Try main endpoint
-      await axios.put(`http://localhost:8080/students/${id}`, student);
+      await axios.put(`http://localhost:8080/student/update/${srollno}`, student);
 
       alert("Student updated successfully!");
       navigate("/admin-dashboard");
     } catch (err) {
       // SECOND TRY – fallback for backend difference
       try {
-        await axios.put(`http://localhost:8080/student/update/${id}`, student);
+        await axios.put(`http://localhost:8080/student/update/${srollno}`, student);
 
         alert("Student updated successfully!");
         navigate("/admin-dashboard");
