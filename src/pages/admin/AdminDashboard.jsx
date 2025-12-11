@@ -419,17 +419,15 @@ const AdminDashboard = () => {
         <thead>
           <tr>
             <th style={styles.th}>Name</th>
-            <th style={styles.th}>Employee ID</th>
-            <th style={styles.th}>Subject</th>
             <th style={styles.th}>Email</th>
-            <th style={styles.th}>Phone</th>
+            <th style={styles.th}>Password</th>
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {teacherList.length === 0 ? (
             <tr>
-              <td style={styles.td} colSpan="6">
+              <td style={styles.td} colSpan="4">
                 No teachers found.
               </td>
             </tr>
@@ -437,10 +435,8 @@ const AdminDashboard = () => {
             teacherList.map((t) => (
               <tr key={t.temployeeid}>
                 <td style={styles.td}>{t.tname}</td>
-                <td style={styles.td}>{t.temployeeid}</td>
-                <td style={styles.td}>{t.tsubject}</td>
                 <td style={styles.td}>{t.temail}</td>
-                <td style={styles.td}>{t.tphone}</td>
+                <td style={styles.td}>{t.tpassword}</td>
 
                 <td style={styles.td}>
                   <button

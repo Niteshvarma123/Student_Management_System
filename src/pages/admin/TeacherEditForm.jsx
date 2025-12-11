@@ -9,10 +9,7 @@ export default function TeacherEditForm() {
   const [teacher, setTeacher] = useState({
     tname: "",
     temail: "",
-    tphone: "",
-    tsalary: "",
-    tsubject: "",
-    taddress: "",
+    tpassword: "",
   });
 
   // Fetch teacher data
@@ -49,13 +46,14 @@ export default function TeacherEditForm() {
     <div style={styles.page}>
       <div style={styles.card}>
         <h2 style={styles.title}>Edit Teacher</h2>
+
         <form onSubmit={handleSubmit} style={styles.form}>
           <label>Name</label>
           <input
             name="tname"
             value={teacher.tname}
             onChange={handleChange}
-            placeholder="Name"
+            placeholder="Enter teacher name"
             style={styles.input}
             required
           />
@@ -65,51 +63,20 @@ export default function TeacherEditForm() {
             name="temail"
             value={teacher.temail}
             onChange={handleChange}
-            placeholder="Email"
+            placeholder="Enter teacher email"
             style={styles.input}
             type="email"
             required
           />
 
-          <label>Phone</label>
+          <label>Password</label>
           <input
-            name="tphone"
-            value={teacher.tphone}
+            name="tpassword"
+            value={teacher.tpassword}
             onChange={handleChange}
-            placeholder="Phone"
+            placeholder="Enter teacher password"
             style={styles.input}
-            type="tel"
-            required
-          />
-
-          <label>Salary</label>
-          <input
-            name="tsalary"
-            value={teacher.tsalary}
-            onChange={handleChange}
-            placeholder="Salary"
-            style={styles.input}
-            type="number"
-            required
-          />
-
-          <label>Subject</label>
-          <input
-            name="tsubject"
-            value={teacher.tsubject}
-            onChange={handleChange}
-            placeholder="Subject"
-            style={styles.input}
-            required
-          />
-
-          <label>Address</label>
-          <input
-            name="taddress"
-            value={teacher.taddress}
-            onChange={handleChange}
-            placeholder="Address"
-            style={styles.input}
+            type="password"
             required
           />
 
