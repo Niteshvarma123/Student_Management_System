@@ -1,5 +1,7 @@
 // StudentDashboard.jsx
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -10,6 +12,8 @@ import {
 } from "react-bootstrap";
 
 export default function StudentDashboard() {
+  const navigate = useNavigate();
+
   const [activeSection, setActiveSection] = useState("dashboard");
   // 'dashboard' | 'courses' | 'attendance' | 'marks' | 'payments' | 'profile'
 
@@ -270,8 +274,21 @@ export default function StudentDashboard() {
 
   /** LOGOUT HANDLER **/
 
-  const handleLogout = () => {
-    alert("Logout clicked (later connect to login/logout logic)");
+  const handleLogout = async () => {
+    try {
+      // Call backend logout endpoint
+      await axios.post("http://localhost:8080/logout"); // Replace with your backend URL
+
+      // Clear any stored user info
+      localStorage.removeItem("token"); // if using JWT
+      localStorage.removeItem("userName");
+
+      // Redirect to auth page
+      navigate("/auth");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
   };
 
   /** MAIN CONTENT BASED ON ACTIVE SECTION **/

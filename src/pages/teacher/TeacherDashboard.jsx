@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col, ProgressBar } from "react-bootstrap";
 import AttendanceCalendar from "../../components/attendance/AttendanceCalender"; // keep your path
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function TeacherDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
@@ -224,9 +226,23 @@ export default function TeacherDashboard() {
   };
 
   // Dummy logout
-  const handleLogout = () => {
-    alert("Logout clicked (wire this to auth later)");
+  const handleLogout = async () => {
+    try {
+      // Call the backend logout API
+      await axios.post("http://localhost:8080/logout"); // replace with your backend URL
+
+      // Optionally, clear any stored auth info
+      localStorage.removeItem("token"); // if using JWT/session storage
+
+      // Redirect to auth page
+      navigate("/auth");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Try again.");
+    }
   };
+
+  const navigate = useNavigate();
 
   // Different main content based on active section
   const renderContent = () => {

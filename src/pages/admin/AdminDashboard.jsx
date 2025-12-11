@@ -317,6 +317,24 @@ const AdminDashboard = () => {
     }
   };
 
+  // Logout
+  const handleLogout = async () => {
+    try {
+      // Call backend logout endpoint
+      await axios.post("http://localhost:8080/auth/logout");
+
+      // Clear any stored tokens/session info
+      localStorage.removeItem("token"); // adjust key if needed
+      sessionStorage.clear();
+
+      // Redirect to login/auth page
+      navigate("/auth");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
+  };
+
   // ---------------- DASHBOARD CARDS ----------------
   const dashboardCards = [
     {
@@ -606,6 +624,7 @@ const AdminDashboard = () => {
               alignItems: "center",
               gap: "10px",
             }}
+            onClick={handleLogout}
           >
             <FaSignOutAlt />
             Logout
