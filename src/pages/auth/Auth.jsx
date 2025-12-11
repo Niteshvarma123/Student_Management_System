@@ -90,16 +90,16 @@ function StudentForm({ cardStyle, btnLogin }) {
         student
       );
 
-      console.log("Student Login:", res.data);
-      // alert("Student Login Successful!");
-
-      navigate("/student/dashboard");
+      if (res.data === "Login Successful") {
+        navigate("/student/dashboard");
+      } else {
+        alert(res.data); // show error message from backend
+      }
     } catch (err) {
-      alert("Student Login Failed!");
+      alert("Something went wrong");
       console.error(err);
     }
   };
-
   return (
     <div style={cardStyle}>
       <h5>Student Login</h5>
@@ -152,11 +152,11 @@ function TeacherForm({ cardStyle, btnLogin }) {
         "http://localhost:8080/auth/tlogin",
         teacher
       );
-
-      console.log("Teacher Login:", res.data);
-      // alert("Teacher Login Successful!");
-
-      navigate("/teacher/dashboard");
+      if (res.data === "Login Successful") {
+        navigate("/teacher/dashboard");
+      } else {
+        alert(res.data);
+      }
     } catch (err) {
       alert("Teacher Login Failed!");
       console.error(err);
@@ -213,11 +213,11 @@ function AdminForm({ cardStyle, btnLogin }) {
 
     try {
       const res = await axios.post("http://localhost:8080/auth/login", admin);
-
-      console.log("Admin Login:", res.data);
-      // alert("Admin Login Successful!");
-
-      navigate("/admin/dashboard");
+      if (res.data === "Login Successful") {
+        navigate("/admin/dashboard");
+      } else {
+        alert(res.data);
+      }
     } catch (err) {
       alert("Admin Login Failed!");
       console.error(err);
