@@ -13,62 +13,72 @@ export default function TeacherDashboard() {
   };
 
   const sidebarStyle = {
-    width: 220,
-    backgroundColor: "#111827",
-    color: "#F9FAFB",
+    width: 240,
+    background: "linear-gradient(180deg, #4F46E5 0%, #6366F1 100%)", // purple gradient
+    color: "#FFFFFF",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    padding: "20px 16px",
+    padding: "24px 16px",
+    fontFamily: "Inter, sans-serif",
+    boxShadow: "2px 0 12px rgba(0,0,0,0.05)",
   };
 
-  const sidebarTopStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-  };
+  // const sidebarTopStyle = {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   gap: 16,
+  // };
+
+  // const sidebarSubTitleStyle = {
+  //   fontSize: "0.85rem",
+  //   color: "rgba(255,255,255,0.7)",
+  // };
 
   const sidebarTitleStyle = {
-    fontSize: "1.1rem",
+    fontSize: "1.3rem",
     fontWeight: 700,
     marginBottom: 8,
   };
-
   const sidebarItemStyle = (isActive) => ({
-    padding: "10px 12px",
-    borderRadius: 10,
-    fontSize: "0.9rem",
+    padding: "12px 16px",
+    borderRadius: 12,
+    fontSize: "0.95rem",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    gap: 8,
-    backgroundColor: isActive ? "rgba(55, 65, 81, 0.95)" : "transparent",
-    color: isActive ? "#FFFFFF" : "#E5E7EB",
-    border: isActive ? "1px solid rgba(251, 191, 36, 0.4)" : "1px solid transparent",
-    transition: "all 0.15s ease",
+    gap: 12,
+    background: isActive ? "rgba(255,255,255,0.15)" : "transparent",
+    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.8)",
+    fontWeight: isActive ? 600 : 500,
+    transition: "all 0.2s ease",
   });
 
-  const bulletStyle = {
-    width: 6,
-    height: 6,
-    borderRadius: "50%",
-    backgroundColor: "#FBBF24",
-  };
+  // const bulletStyle = {
+  //   width: 6,
+  //   height: 6,
+  //   borderRadius: "50%",
+  //   backgroundColor: "#FBBF24",
+  // };
 
   const sidebarFooterStyle = {
-    borderTop: "1px solid #1F2937",
-    paddingTop: 12,
-    marginTop: 12,
+    borderTop: "1px solid rgba(255,255,255,0.2)",
+    paddingTop: 16,
+    marginTop: 16,
   };
 
   const logoutStyle = {
-    padding: "8px 10px",
-    borderRadius: 10,
-    fontSize: "0.9rem",
+    padding: "10px 16px",
+    borderRadius: 12,
+    fontSize: "0.95rem",
+    fontWeight: 600,
     cursor: "pointer",
-    color: "#FCA5A5",
+    color: "#FFFFFF",
+    background: "#EF4444", // red button
+    textAlign: "center",
+    transition: "all 0.2s ease",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
   };
-
   // Main content container
   const pageStyle = {
     paddingTop: 24,
@@ -238,10 +248,12 @@ export default function TeacherDashboard() {
                 <span style={sectionTitleStyle}>Summary</span>
               </div>
               <p style={smallMutedText}>
-                Click on a date in the calendar to mark Present (green), Absent (red) or Holiday (blue).
+                Click on a date in the calendar to mark Present (green), Absent
+                (red) or Holiday (blue).
               </p>
               <p style={smallMutedText}>
-                You can extend this section later to show counts per month, export attendance, etc.
+                You can extend this section later to show counts per month,
+                export attendance, etc.
               </p>
             </div>
           </Col>
@@ -271,7 +283,9 @@ export default function TeacherDashboard() {
                 <span>Maths - G10</span>
                 <span>Unit Test 1</span>
                 <span>
-                  <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>86 / 100</span>
+                  <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
+                    86 / 100
+                  </span>
                 </span>
               </div>
 
@@ -280,7 +294,9 @@ export default function TeacherDashboard() {
                 <span>Physics - G11</span>
                 <span>Mid Term</span>
                 <span>
-                  <span style={chipStyle("rgba(59,130,246,0.1)", "#1D4ED8")}>74 / 100</span>
+                  <span style={chipStyle("rgba(59,130,246,0.1)", "#1D4ED8")}>
+                    74 / 100
+                  </span>
                 </span>
               </div>
 
@@ -289,7 +305,9 @@ export default function TeacherDashboard() {
                 <span>CS - G12</span>
                 <span>Lab Assessment</span>
                 <span>
-                  <span style={chipStyle("rgba(251,191,36,0.1)", "#B45309")}>Pending</span>
+                  <span style={chipStyle("rgba(251,191,36,0.1)", "#B45309")}>
+                    Pending
+                  </span>
                 </span>
               </div>
             </div>
@@ -332,21 +350,27 @@ export default function TeacherDashboard() {
             <div style={statCardStyle}>
               <span style={statLabelStyle}>Active Classes</span>
               <span style={statValueStyle}>06</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>3 online • 3 offline</span>
+              <span style={{ ...smallMutedText, marginTop: 4 }}>
+                3 online • 3 offline
+              </span>
             </div>
           </Col>
           <Col md={3} sm={6}>
             <div style={statCardStyle}>
               <span style={statLabelStyle}>Attendance</span>
               <span style={statValueStyle}>23</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>Present today</span>
+              <span style={{ ...smallMutedText, marginTop: 4 }}>
+                Present today
+              </span>
             </div>
           </Col>
           <Col md={3} sm={6}>
             <div style={statCardStyle}>
               <span style={statLabelStyle}>Attendance</span>
               <span style={statValueStyle}>5</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>Absent today</span>
+              <span style={{ ...smallMutedText, marginTop: 4 }}>
+                Absent today
+              </span>
             </div>
           </Col>
         </Row>
@@ -372,7 +396,10 @@ export default function TeacherDashboard() {
                 <span>32</span>
                 <span>Today, 10:00 AM</span>
                 <span>
-                  <ProgressBar now={76} style={{ height: 6, borderRadius: 999 }} />
+                  <ProgressBar
+                    now={76}
+                    style={{ height: 6, borderRadius: 999 }}
+                  />
                 </span>
               </div>
 
@@ -456,48 +483,50 @@ export default function TeacherDashboard() {
     <div style={layoutStyle}>
       {/* Sidebar */}
       <aside style={sidebarStyle}>
-        <div style={sidebarTopStyle}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div>
             <div style={sidebarTitleStyle}>Teacher Panel</div>
-            <div style={{ fontSize: "0.8rem", color: "#9CA3AF" }}>
-              Manage your daily teaching workflow.
-            </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div
               style={sidebarItemStyle(activeSection === "dashboard")}
               onClick={() => setActiveSection("dashboard")}
             >
-              <span style={bulletStyle}></span>
+              <span>🏠</span>
               <span>Dashboard</span>
             </div>
             <div
               style={sidebarItemStyle(activeSection === "attendance")}
               onClick={() => setActiveSection("attendance")}
             >
-              <span style={bulletStyle}></span>
+              <span>📆</span>
               <span>Attendance</span>
             </div>
             <div
               style={sidebarItemStyle(activeSection === "marks")}
               onClick={() => setActiveSection("marks")}
             >
-              <span style={bulletStyle}></span>
+              <span>📊</span>
               <span>Marks</span>
             </div>
-             <div
+            <div
               style={sidebarItemStyle(activeSection === "profile")}
               onClick={() => setActiveSection("profile")}
             >
-              <span style={bulletStyle}></span>
+              <span>👤</span>
               <span>Profile</span>
             </div>
           </div>
         </div>
 
         <div style={sidebarFooterStyle}>
-          <div style={logoutStyle} onClick={handleLogout}>
+          <div
+            style={logoutStyle}
+            onClick={handleLogout}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#DC2626")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#EF4444")}
+          >
             ⎋ Logout
           </div>
         </div>

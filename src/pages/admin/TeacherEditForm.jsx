@@ -2,59 +2,58 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function StudentEditForm() {
-  const { srollno } = useParams();
+export default function TeacherEditForm() {
+  const { temployeeid } = useParams();
   const navigate = useNavigate();
 
-  const [student, setStudent] = useState({
-    sname: "",
-    semail: "",
-    sphone: "",
-    stotalfee: "",
-    spaid: "",
-    sunpaid: "",
-    saddress: "",
+  const [teacher, setTeacher] = useState({
+    tname: "",
+    temail: "",
+    tphone: "",
+    tsalary: "",
+    tsubject: "",
+    taddress: "",
   });
 
-  // Fetch student data
+  // Fetch teacher data
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/student/${srollno}`)
-      .then((res) => setStudent(res.data))
+      .get(`http://localhost:8080/teacher/${temployeeid}`)
+      .then((res) => setTeacher(res.data))
       .catch((err) => {
-        console.error("Failed to load student:", err);
-        alert("Failed to load student data");
+        console.error("Failed to load teacher:", err);
+        alert("Failed to load teacher data");
       });
-  }, [srollno]);
+  }, [temployeeid]);
 
   const handleChange = (e) => {
-    setStudent({ ...student, [e.target.name]: e.target.value });
+    setTeacher({ ...teacher, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:8080/student/update/${srollno}`,
-        student
+        `http://localhost:8080/teacher/update/${temployeeid}`,
+        teacher
       );
-      alert("Student updated successfully!");
+      alert("Teacher updated successfully!");
       navigate("/admin/dashboard");
     } catch (err) {
       console.error("Update failed:", err);
-      alert("Failed to update student");
+      alert("Failed to update teacher");
     }
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Edit Student</h2>
+        <h2 style={styles.title}>Edit Teacher</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <label>Name</label>
           <input
-            name="sname"
-            value={student.sname}
+            name="tname"
+            value={teacher.tname}
             onChange={handleChange}
             placeholder="Name"
             style={styles.input}
@@ -63,8 +62,8 @@ export default function StudentEditForm() {
 
           <label>Email</label>
           <input
-            name="semail"
-            value={student.semail}
+            name="temail"
+            value={teacher.temail}
             onChange={handleChange}
             placeholder="Email"
             style={styles.input}
@@ -74,8 +73,8 @@ export default function StudentEditForm() {
 
           <label>Phone</label>
           <input
-            name="sphone"
-            value={student.sphone}
+            name="tphone"
+            value={teacher.tphone}
             onChange={handleChange}
             placeholder="Phone"
             style={styles.input}
@@ -83,43 +82,31 @@ export default function StudentEditForm() {
             required
           />
 
-          <label>Total Fee</label>
+          <label>Salary</label>
           <input
-            name="stotalfee"
-            value={student.stotalfee}
+            name="tsalary"
+            value={teacher.tsalary}
             onChange={handleChange}
-            placeholder="Total Fee"
+            placeholder="Salary"
             style={styles.input}
             type="number"
             required
           />
 
-          <label>Paid</label>
+          <label>Subject</label>
           <input
-            name="spaid"
-            value={student.spaid}
+            name="tsubject"
+            value={teacher.tsubject}
             onChange={handleChange}
-            placeholder="Paid"
+            placeholder="Subject"
             style={styles.input}
-            type="number"
-            required
-          />
-
-          <label>Unpaid</label>
-          <input
-            name="sunpaid"
-            value={student.sunpaid}
-            onChange={handleChange}
-            placeholder="Unpaid"
-            style={styles.input}
-            type="number"
             required
           />
 
           <label>Address</label>
           <input
-            name="saddress"
-            value={student.saddress}
+            name="taddress"
+            value={teacher.taddress}
             onChange={handleChange}
             placeholder="Address"
             style={styles.input}
@@ -127,7 +114,7 @@ export default function StudentEditForm() {
           />
 
           <button type="submit" style={styles.button}>
-            Update Student
+            Update Teacher
           </button>
         </form>
       </div>
@@ -140,7 +127,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "60px 0", // space from header/footer
+    padding: "60px 0",
     background: "#f0f2f5",
   },
   card: {

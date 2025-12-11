@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  FaTachometerAlt,
+  FaUserGraduate,
+  FaChalkboardTeacher,
+  FaPlus,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
+const sidebarItems = [
+  { icon: <FaTachometerAlt />, label: "Dashboard", tab: "dashboard" },
+  { icon: <FaUserGraduate />, label: "Students", tab: "students" },
+  { icon: <FaChalkboardTeacher />, label: "Teachers", tab: "teachers" },
+  { icon: <FaPlus />, label: "Add Student", tab: "addStudent" },
+  { icon: <FaPlus />, label: "Add Teacher", tab: "addTeacher" },
+];
 const styles = {
   dashboard: {
     display: "flex",
     height: "100vh",
+    textAlign: "center",
     overflowX: "hidden",
     background: "#f4f6f9",
     fontFamily: "Arial, sans-serif",
@@ -52,6 +67,7 @@ const styles = {
     fontSize: "50px",
     fontWeight: "bold",
     color: "#071319",
+    textAlign: "center",
     textShadow:
       "0 0 10px rgba(225, 223, 240, 0.301), 0 0 20px rgba(7, 17, 23, 0.6)",
     marginBottom: "20px",
@@ -163,9 +179,10 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  // ---------------- STUDENT STATES ----------------
   const [studentList, setStudentList] = useState([]);
 
-  // Student form state
   const [student, setStudent] = useState({
     srollno: "",
     sname: "",
@@ -178,7 +195,19 @@ const AdminDashboard = () => {
     saddress: "",
   });
 
-  // Fetch all students
+  // ---------------- TEACHER STATES ----------------
+  const [teacherList, setTeacherList] = useState([]);
+
+  const [teacher, setTeacher] = useState({
+    tname: "",
+    temployeeid: "",
+    tsubject: "",
+    temail: "",
+    tpassword: "",
+    tphone: "",
+  });
+
+  // ---------------- FETCH STUDENTS ----------------
   const fetchStudents = async () => {
     try {
       const res = await axios.get("http://localhost:8080/student/all");
@@ -189,21 +218,34 @@ const AdminDashboard = () => {
     }
   };
 
+  // ---------------- FETCH TEACHERS ----------------
+  const fetchTeachers = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/teacher/all");
+      setTeacherList(res.data || []);
+    } catch (error) {
+      console.error("Failed to fetch teachers:", error);
+      setTeacherList([]);
+    }
+  };
+
   useEffect(() => {
     fetchStudents();
+    fetchTeachers();
   }, []);
 
-  // Handle input change
+  // ---------------- STUDENT HANDLERS ----------------
   const handleStudentChange = (e) => {
     setStudent({ ...student, [e.target.name]: e.target.value });
   };
 
-  // Add student
   const handleStudentSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await axios.post("http://localhost:8080/student/add", student);
       alert("Student Registered Successfully!");
+
       setStudent({
         srollno: "",
         sname: "",
@@ -215,19 +257,17 @@ const AdminDashboard = () => {
         sunpaid: "",
         saddress: "",
       });
-      fetchStudents(); // refresh table
+
+      fetchStudents();
     } catch (err) {
       console.error(err);
       alert("Failed to register student");
     }
   };
 
-  // Delete student
-  const handleDelete = async (stu) => {
+  const handleDeleteStudent = async (stu) => {
     try {
-      await axios.delete(
-        `http://localhost:8080/student/delete/${stu.srollno}`
-      );
+      await axios.delete(`http://localhost:8080/student/delete/${stu.srollno}`);
       alert("Student deleted successfully");
       fetchStudents();
     } catch (error) {
@@ -236,53 +276,68 @@ const AdminDashboard = () => {
     }
   };
 
+  // ---------------- TEACHER HANDLERS ----------------
+  const handleTeacherChange = (e) => {
+    setTeacher({ ...teacher, [e.target.name]: e.target.value });
+  };
+
+  const handleTeacherSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:8080/teacher/add", teacher);
+      alert("Teacher Registered Successfully!");
+
+      setTeacher({
+        tname: "",
+        temployeeid: "",
+        tsubject: "",
+        temail: "",
+        tpassword: "",
+        tphone: "",
+      });
+
+      fetchTeachers();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to register teacher");
+    }
+  };
+
+  const handleDeleteTeacher = async (t) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/teacher/delete/${t.temployeeid}`
+      );
+      alert("Teacher deleted successfully");
+      fetchTeachers();
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Failed to delete teacher");
+    }
+  };
+
+  // ---------------- DASHBOARD CARDS ----------------
   const dashboardCards = [
     {
       title: "Total Students",
       value: studentList.length,
       desc: "Registered students",
     },
-    { title: "Total Teachers", value: "20", desc: "Registered teachers" },
+    {
+      title: "Total Teachers",
+      value: teacherList.length,
+      desc: "Registered teachers",
+    },
     { title: "Classes", value: "12", desc: "Active classes" },
     { title: "Fees Collected", value: student.spaid, desc: "This semester" },
     { title: "Attendance Avg", value: "88%", desc: "Overall" },
     { title: "Pending Registrations", value: "3", desc: "New requests" },
   ];
 
-  const teacherTable = [
-    { name: "Kavya", empId: "T001", subject: "Math", status: "Active" },
-    { name: "Ramesh", empId: "T002", subject: "Science", status: "Active" },
-  ];
-
-  const renderDashboardCards = () => (
-    <div style={styles.cardsContainer}>
-      {dashboardCards.map((card, index) => {
-        const isHovered = hoveredCard === index;
-        return (
-          <div
-            key={index}
-            style={{
-              ...styles.card,
-              transform: isHovered ? "translateY(-5px)" : "translateY(0px)",
-              boxShadow: isHovered
-                ? "0 8px 20px rgba(0,0,0,0.2)"
-                : "0 4px 12px rgba(0,0,0,0.1)",
-            }}
-            onMouseEnter={() => setHoveredCard(index)}
-            onMouseLeave={() => setHoveredCard(null)}
-          >
-            <h3 style={styles.cardTitle}>{card.title}</h3>
-            <h1 style={styles.cardValue}>{card.value}</h1>
-            <p style={styles.cardDesc}>{card.desc}</p>
-          </div>
-        );
-      })}
-    </div>
-  );
-
+  // ---------------- RENDER STUDENT TABLE ----------------
   const renderStudentTable = () => (
     <div style={styles.tableContainer}>
-      <h2>Students</h2>
       <table style={styles.table}>
         <thead>
           <tr>
@@ -306,28 +361,27 @@ const AdminDashboard = () => {
             </tr>
           ) : (
             studentList.map((stu) => (
-              <tr key={stu.id ?? stu.srollno}>
-                <td style={styles.td}>{stu.rollNo ?? stu.srollno}</td>
-                <td style={styles.td}>{stu.name ?? stu.sname}</td>
-                <td style={styles.td}>{stu.email ?? stu.semail}</td>
-                <td style={styles.td}>{stu.phone ?? stu.sphone}</td>
-                <td style={styles.td}>{stu.totalFee ?? stu.stotalfee}</td>
-                <td style={styles.td}>{stu.paid ?? stu.spaid}</td>
-                <td style={styles.td}>{stu.unpaid ?? stu.sunpaid}</td>
-                <td style={styles.td}>{stu.address ?? stu.saddress}</td>
+              <tr key={stu.srollno}>
+                <td style={styles.td}>{stu.srollno}</td>
+                <td style={styles.td}>{stu.sname}</td>
+                <td style={styles.td}>{stu.semail}</td>
+                <td style={styles.td}>{stu.sphone}</td>
+                <td style={styles.td}>{stu.stotalfee}</td>
+                <td style={styles.td}>{stu.spaid}</td>
+                <td style={styles.td}>{stu.sunpaid}</td>
+                <td style={styles.td}>{stu.saddress}</td>
+
                 <td style={styles.td}>
                   <button
                     style={{ ...styles.buttonBase, ...styles.editButton }}
-                    onClick={() =>
-                      navigate(`/edit/student/${stu.id ?? stu.srollno}`)
-                    }
+                    onClick={() => navigate(`/edit/student/${stu.srollno}`)}
                   >
                     Edit
                   </button>
 
                   <button
                     style={{ ...styles.buttonBase, ...styles.deleteButton }}
-                    onClick={() => handleDelete(stu)}
+                    onClick={() => handleDeleteStudent(stu)}
                   >
                     Delete
                   </button>
@@ -340,162 +394,255 @@ const AdminDashboard = () => {
     </div>
   );
 
+  // ---------------- RENDER TEACHER TABLE ----------------
   const renderTeacherTable = () => (
     <div style={styles.tableContainer}>
-      <h2>Teachers</h2>
       <table style={styles.table}>
         <thead>
           <tr>
             <th style={styles.th}>Name</th>
             <th style={styles.th}>Employee ID</th>
             <th style={styles.th}>Subject</th>
-            <th style={styles.th}>Status</th>
+            <th style={styles.th}>Email</th>
+            <th style={styles.th}>Phone</th>
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {teacherTable.map((t, idx) => (
-            <tr key={idx}>
-              <td style={styles.td}>{t.name}</td>
-              <td style={styles.td}>{t.empId}</td>
-              <td style={styles.td}>{t.subject}</td>
-              <td style={styles.td}>{t.status}</td>
-              <td style={styles.td}>
-                <button style={{ ...styles.buttonBase, ...styles.editButton }}>
-                  Edit
-                </button>
-                <button
-                  style={{ ...styles.buttonBase, ...styles.deleteButton }}
-                >
-                  Delete
-                </button>
+          {teacherList.length === 0 ? (
+            <tr>
+              <td style={styles.td} colSpan="6">
+                No teachers found.
               </td>
             </tr>
-          ))}
+          ) : (
+            teacherList.map((t) => (
+              <tr key={t.temployeeid}>
+                <td style={styles.td}>{t.tname}</td>
+                <td style={styles.td}>{t.temployeeid}</td>
+                <td style={styles.td}>{t.tsubject}</td>
+                <td style={styles.td}>{t.temail}</td>
+                <td style={styles.td}>{t.tphone}</td>
+
+                <td style={styles.td}>
+                  <button
+                    style={{ ...styles.buttonBase, ...styles.editButton }}
+                    onClick={() => navigate(`/edit/teacher/${t.temployeeid}`)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    style={{ ...styles.buttonBase, ...styles.deleteButton }}
+                    onClick={() => handleDeleteTeacher(t)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
   );
 
+  // ---------------- ADD STUDENT FORM ----------------
   const renderAddStudentForm = () => (
-    <div style={styles.formCard}>
-      <h2>Add Student</h2>
+    <div style={{ ...styles.formCard, background: "#f0f4f8" }}>
+      {/* <h2 style={{ marginBottom: "20px", color: "#333" }}>Add Student</h2> */}
       <form style={styles.form} onSubmit={handleStudentSubmit}>
         {Object.keys(student).map((key) => (
-          <input
+          <div
             key={key}
-            type={
-              key.toLowerCase().includes("email")
-                ? "email"
-                : key.toLowerCase().includes("password")
-                ? "password"
-                : key.toLowerCase().includes("phone") ||
-                  key.toLowerCase().includes("roll") ||
-                  key.toLowerCase().includes("fee") ||
-                  key.toLowerCase().includes("paid") ||
-                  key.toLowerCase().includes("unpaid")
-                ? "number"
-                : "text"
-            }
-            name={key}
-            placeholder={key}
-            required
-            style={styles.input}
-            value={student[key]}
-            onChange={handleStudentChange}
-          />
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              textAlign: "left",
+            }}
+          >
+            <label
+              style={{ marginBottom: "6px", fontWeight: "600", color: "#444" }}
+            >
+              {key
+                .replace(/^s/, "")
+                .replace(/([A-Z])/g, " $1")
+                .toUpperCase()}
+            </label>
+            <input
+              type={
+                key.includes("email")
+                  ? "email"
+                  : key.includes("password")
+                  ? "password"
+                  : key.includes("phone") ||
+                    key.includes("roll") ||
+                    key.includes("fee") ||
+                    key.includes("paid") ||
+                    key.includes("unpaid")
+                  ? "number"
+                  : "text"
+              }
+              name={key}
+              placeholder={`Enter ${key.replace(/^s/, "").toLowerCase()}`}
+              required
+              style={{
+                ...styles.input,
+                border: "1px solid #ccc",
+                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
+                transition: "0.2s",
+              }}
+              value={student[key]}
+              onChange={handleStudentChange}
+            />
+          </div>
         ))}
-        <button type="submit" style={styles.formButton}>
+        <button
+          type="submit"
+          style={{
+            ...styles.formButton,
+            backgroundColor: "#0078ff",
+            marginTop: "15px",
+          }}
+        >
           Add Student
         </button>
       </form>
     </div>
   );
 
+  // ---------------- ADD TEACHER FORM ----------------
   const renderAddTeacherForm = () => (
-    <div style={styles.formCard}>
-      <h2>Add Teacher</h2>
-      <form style={styles.form}>
-        <input type="text" placeholder="Name" required style={styles.input} />
-        <input
-          type="text"
-          placeholder="Employee ID"
-          required
-          style={styles.input}
-        />
-        <input
-          type="text"
-          placeholder="Subject"
-          required
-          style={styles.input}
-        />
-        <input type="email" placeholder="Email" required style={styles.input} />
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          style={styles.input}
-        />
-        <input
-          type="text"
-          placeholder="Contact No"
-          required
-          style={styles.input}
-        />
-        <button type="submit" style={styles.formButton}>
+    <div style={{ ...styles.formCard, background: "#f0f4f8" }}>
+      {/* <h2 style={{ marginBottom: "20px", color: "#333" }}>Add Teacher</h2> */}
+      <form style={styles.form} onSubmit={handleTeacherSubmit}>
+        {Object.keys(teacher).map((key) => (
+          <div
+            key={key}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              textAlign: "left",
+            }}
+          >
+            <label
+              style={{ marginBottom: "6px", fontWeight: "600", color: "#444" }}
+            >
+              {key
+                .replace(/^t/, "")
+                .replace(/([A-Z])/g, " $1")
+                .toUpperCase()}
+            </label>
+            <input
+              type={
+                key.includes("email")
+                  ? "email"
+                  : key.includes("password")
+                  ? "password"
+                  : key.includes("phone")
+                  ? "number"
+                  : "text"
+              }
+              name={key}
+              placeholder={`Enter ${key.replace(/^t/, "").toLowerCase()}`}
+              required
+              style={{
+                ...styles.input,
+                border: "1px solid #ccc",
+                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
+                transition: "0.2s",
+              }}
+              value={teacher[key]}
+              onChange={handleTeacherChange}
+            />
+          </div>
+        ))}
+        <button
+          type="submit"
+          style={{
+            ...styles.formButton,
+            backgroundColor: "#0078ff",
+            marginTop: "15px",
+          }}
+        >
           Add Teacher
         </button>
       </form>
     </div>
   );
 
-  const sidebarItemStyle = (tab) => ({
-    ...styles.sidebarItem,
-    ...(activeTab === tab ? styles.sidebarItemActive : {}),
-  });
+  // const sidebarItemStyle = (tab) => ({
+  //   ...styles.sidebarItem,
+  //   ...(activeTab === tab ? styles.sidebarItemActive : {}),
+  // });
 
   return (
-    <div style={styles.dashboard}>
+    <div style={{ display: "flex", height: "100vh" }}>
+      {/* Sidebar */}
       <div style={styles.sidebar}>
         <h2 style={styles.logo}>Admin</h2>
         <ul style={styles.sidebarList}>
+          {sidebarItems.map((item) => (
+            <li
+              key={item.tab}
+              style={{
+                ...styles.sidebarItem,
+                ...(activeTab === item.tab ? styles.sidebarItemActive : {}),
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+              onClick={() => setActiveTab(item.tab)}
+            >
+              {item.icon}
+              {item.label}
+            </li>
+          ))}
           <li
-            style={sidebarItemStyle("dashboard")}
-            onClick={() => setActiveTab("dashboard")}
+            style={{
+              ...styles.sidebarItem,
+              ...styles.logout,
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
           >
-            📊 Dashboard
+            <FaSignOutAlt />
+            Logout
           </li>
-          <li
-            style={sidebarItemStyle("students")}
-            onClick={() => setActiveTab("students")}
-          >
-            👨‍🎓 Students
-          </li>
-          <li
-            style={sidebarItemStyle("teachers")}
-            onClick={() => setActiveTab("teachers")}
-          >
-            👩‍🏫 Teachers
-          </li>
-          <li
-            style={sidebarItemStyle("addStudent")}
-            onClick={() => setActiveTab("addStudent")}
-          >
-            ➕ Add Student
-          </li>
-          <li
-            style={sidebarItemStyle("addTeacher")}
-            onClick={() => setActiveTab("addTeacher")}
-          >
-            ➕ Add Teacher
-          </li>
-          <li style={{ ...styles.sidebarItem, ...styles.logout }}>🚪 Logout</li>
         </ul>
       </div>
 
+      {/* Main Content */}
       <div style={styles.mainContent}>
         <h1 style={styles.tabTitle}>{activeTab.toUpperCase()}</h1>
-        {activeTab === "dashboard" && renderDashboardCards()}
+        {activeTab === "dashboard" && (
+          <div style={styles.cardsContainer}>
+            {dashboardCards.map((card, index) => {
+              const isHovered = hoveredCard === index;
+              return (
+                <div
+                  key={index}
+                  style={{
+                    ...styles.card,
+                    transform: isHovered
+                      ? "translateY(-5px)"
+                      : "translateY(0px)",
+                    boxShadow: isHovered
+                      ? "0 8px 20px rgba(0,0,0,0.2)"
+                      : "0 4px 12px rgba(0,0,0,0.1)",
+                  }}
+                  onMouseEnter={() => setHoveredCard(index)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <h3 style={styles.cardTitle}>{card.title}</h3>
+                  <h1 style={styles.cardValue}>{card.value}</h1>
+                  <p style={styles.cardDesc}>{card.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
         {activeTab === "students" && renderStudentTable()}
         {activeTab === "teachers" && renderTeacherTable()}
         {activeTab === "addStudent" && renderAddStudentForm()}

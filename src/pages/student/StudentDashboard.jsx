@@ -26,7 +26,7 @@ export default function StudentDashboard() {
 
   const sidebarStyle = {
     width: 230,
-    background: "linear-gradient(180deg, #9C27FF 0%, #7C4DFF 100%)",
+    background: "linear-gradient( #591f7aff 0%, #9a1dd8ff 100%)",
     color: "#FFFFFF",
     display: "flex",
     flexDirection: "column",
@@ -47,11 +47,6 @@ export default function StudentDashboard() {
     marginBottom: 8,
   };
 
-  const sidebarSubTitleStyle = {
-    fontSize: "0.8rem",
-    color: "#9CA3AF",
-  };
-
   const sidebarItemStyle = (isActive) => ({
     padding: "12px 14px",
     borderRadius: 12,
@@ -61,23 +56,28 @@ export default function StudentDashboard() {
     display: "flex",
     alignItems: "center",
     gap: 12,
-    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
+    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.85)", // brighter
     background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
     transition: "all 0.25s ease",
     letterSpacing: "0.3px",
+    ":hover": {
+      background: "rgba(255,255,255,0.25)",
+      color: "#FFFFFF",
+    },
   });
+
   const iconStyle = (isActive) => ({
     fontSize: "1.05rem",
     color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
     transition: "0.2s ease",
   });
 
-  const bulletStyle = {
-    width: 6,
-    height: 6,
-    borderRadius: "50%",
-    backgroundColor: "#3B82F6",
-  };
+  // const bulletStyle = {
+  //   width: 6,
+  //   height: 6,
+  //   borderRadius: "50%",
+  //   backgroundColor: "#3B82F6",
+  // };
 
   const sidebarFooterStyle = {
     borderTop: "1px solid #1F2937",
@@ -86,11 +86,16 @@ export default function StudentDashboard() {
   };
 
   const logoutStyle = {
-    padding: "8px 10px",
-    borderRadius: 10,
-    fontSize: "0.9rem",
+    padding: "10px 16px",
+    borderRadius: 12,
+    fontSize: "0.95rem",
+    fontWeight: 600,
     cursor: "pointer",
-    color: "#FCA5A5",
+    color: "#FFFFFF",
+    background: "rgba(255, 69, 58, 0.9)", // slightly reddish
+    textAlign: "center",
+    transition: "all 0.2s ease",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
   };
 
   /** MAIN CONTENT STYLES **/
@@ -625,9 +630,6 @@ export default function StudentDashboard() {
         <div style={sidebarTopStyle}>
           <div>
             <div style={sidebarTitleStyle}>Student Panel</div>
-            <div style={sidebarSubTitleStyle}>
-              Access your courses, marks, and fee details.
-            </div>
           </div>
 
           <div
@@ -684,7 +686,16 @@ export default function StudentDashboard() {
         </div>
 
         <div style={sidebarFooterStyle}>
-          <div style={logoutStyle} onClick={handleLogout}>
+          <div
+            style={logoutStyle}
+            onClick={handleLogout}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "rgba(255, 69, 58, 1)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "rgba(255, 69, 58, 0.9)")
+            }
+          >
             ⎋ Logout
           </div>
         </div>
