@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, ProgressBar } from "react-bootstrap";
 import AttendanceCalendar from "../../components/attendance/AttendanceCalender"; // keep your path
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,32 @@ import axios from "axios";
 
 export default function TeacherDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
+
+  // Profile
+  const [teacher, setTeacher] = useState(null);
+  useEffect(() => {
+    const email = localStorage.getItem("teacherEmail");
+
+    axios
+      .get(`http://localhost:8080/teacher/getByEmail/${email}`)
+      .then((res) => setTeacher(res.data));
+  }, []);
+
+  // Marks
+  const [marks, setMarks] = useState([]);
+  useEffect(() => {
+    const email = localStorage.getItem("teacherEmail");
+
+    axios
+      .get(`http://localhost:8080/teacher/getByEmail/${email}`)
+      .then((res) => setTeacher(res.data));
+
+    // Fetch Marks Table Data
+    axios
+      .get("http://localhost:8080/marks/all") // your backend marks API
+      .then((res) => setMarks(res.data))
+      .catch((err) => console.log(err));
+  }, []);
 
   // Layout styles
   const layoutStyle = {
@@ -279,56 +305,37 @@ export default function TeacherDashboard() {
 
     if (activeSection === "marks") {
       return (
-        <Row className="g-3">
-          <Col lg={12}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Marks Overview</span>
-                <span style={sectionLinkStyle}>View all</span>
-              </div>
+        <div style={{ ...sectionCardStyle, padding: 20 }}>
+          <div style={sectionHeaderStyle}>
+            <span style={sectionTitleStyle}>Marks Overview</span>
+          </div>
 
-              <div style={tableHeaderStyle}>
-                <span>Student</span>
-                <span>Class</span>
-                <span>Exam</span>
-                <span>Marks</span>
-              </div>
+          {/* Table Header */}
+          <div style={tableHeaderStyle}>
+            <span>Student</span>
+            <span>Class</span>
+            <span>Exam</span>
+            <span>Marks</span>
+          </div>
 
-              <div style={tableRowStyle}>
-                <span>Rohit Sharma</span>
-                <span>Maths - G10</span>
-                <span>Unit Test 1</span>
+          {/* Table Data */}
+          {marks.length === 0 ? (
+            <p>No marks available</p>
+          ) : (
+            marks.map((m, index) => (
+              <div key={index} style={tableRowStyle}>
+                <span>{m.studentName}</span>
+                <span>{m.className}</span>
+                <span>{m.examType}</span>
                 <span>
                   <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
-                    86 / 100
+                    {m.marks} / {m.totalMarks}
                   </span>
                 </span>
               </div>
-
-              <div style={tableRowStyle}>
-                <span>Ananya Verma</span>
-                <span>Physics - G11</span>
-                <span>Mid Term</span>
-                <span>
-                  <span style={chipStyle("rgba(59,130,246,0.1)", "#1D4ED8")}>
-                    74 / 100
-                  </span>
-                </span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Rahul Jain</span>
-                <span>CS - G12</span>
-                <span>Lab Assessment</span>
-                <span>
-                  <span style={chipStyle("rgba(251,191,36,0.1)", "#B45309")}>
-                    Pending
-                  </span>
-                </span>
-              </div>
-            </div>
-          </Col>
-        </Row>
+            ))
+          )}
+        </div>
       );
     }
 
@@ -340,10 +347,17 @@ export default function TeacherDashboard() {
               <div style={sectionHeaderStyle}>
                 <span style={sectionTitleStyle}>Profile</span>
               </div>
-              <p style={smallMutedText}>Name: John Doe</p>
-              <p style={smallMutedText}>Role: Mathematics Teacher</p>
-              <p style={smallMutedText}>Email: john.doe@example.com</p>
-              <p style={smallMutedText}>Phone: +91 98765 43210</p>
+
+              {!teacher ? (
+                <p>Loading...</p>
+              ) : (
+                <>
+                  <p>Name: {teacher.tname}</p>
+                  <p>Role: {teacher.role}</p>
+                  <p>Email: {teacher.temail}</p>
+                  <p>Phone: {teacher.tphone}</p>
+                </>
+              )}
             </div>
           </Col>
         </Row>
