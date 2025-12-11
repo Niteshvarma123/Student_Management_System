@@ -9,26 +9,22 @@ export default function TeacherDashboard() {
 
   // Profile
   const [teacher, setTeacher] = useState(null);
+
   useEffect(() => {
     const email = localStorage.getItem("teacherEmail");
 
     axios
       .get(`http://localhost:8080/teacher/getByEmail/${email}`)
-      .then((res) => setTeacher(res.data));
+      .then((res) => setTeacher(res.data))
+      .catch((err) => console.log(err));
   }, []);
 
   // Marks
   const [marks, setMarks] = useState([]);
+
   useEffect(() => {
-    const email = localStorage.getItem("teacherEmail");
-
     axios
-      .get(`http://localhost:8080/teacher/getByEmail/${email}`)
-      .then((res) => setTeacher(res.data));
-
-    // Fetch Marks Table Data
-    axios
-      .get("http://localhost:8080/marks/all") // your backend marks API
+      .get("http://localhost:8080/marks/all")
       .then((res) => setMarks(res.data))
       .catch((err) => console.log(err));
   }, []);
