@@ -221,7 +221,7 @@ const AdminDashboard = () => {
   // ---------------- FETCH TEACHERS ----------------
   const fetchTeachers = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/teacher/all");
+      const res = await axios.get("http://localhost:8080/teacher/tall");
       setTeacherList(res.data || []);
     } catch (error) {
       console.error("Failed to fetch teachers:", error);
