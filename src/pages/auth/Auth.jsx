@@ -15,7 +15,8 @@ export default function Auth() {
     alignItems: "center",
     justifyContent: "center",
     background: "#020617", // dark bg
-    fontFamily: "'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontFamily:
+      "'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   };
 
   const cardWrapper = {
@@ -54,7 +55,8 @@ export default function Auth() {
       return {
         bg: "linear-gradient(135deg, #7c3aed 0%, #8b5cf6 40%, #6366f1 100%)",
         title: "Welcome to the student portal",
-        subtitle: "Access your courses, fees, results and updates in one place.",
+        subtitle:
+          "Access your courses, fees, results and updates in one place.",
         bigLabel: "S",
         tag: "Student Access",
       };
@@ -63,7 +65,8 @@ export default function Auth() {
       return {
         bg: "linear-gradient(135deg, #0f766e 0%, #14b8a6 40%, #22c55e 100%)",
         title: "Welcome, teacher",
-        subtitle: "Manage classes, attendance, assignments and student progress.",
+        subtitle:
+          "Manage classes, attendance, assignments and student progress.",
         bigLabel: "T",
         tag: "Teacher Console",
       };
@@ -72,7 +75,8 @@ export default function Auth() {
       // admin
       bg: "linear-gradient(135deg, #b91c1c 0%, #f97316 40%, #facc15 100%)",
       title: "Admin control center",
-      subtitle: "Configure departments, users and analytics for your institute.",
+      subtitle:
+        "Configure departments, users and analytics for your institute.",
       bigLabel: "A",
       tag: "Admin Panel",
     };
@@ -81,12 +85,12 @@ export default function Auth() {
   const bannerConfig = getBannerConfig();
 
   // --- COMMON STYLES ---
-  const brandText = {
-    fontSize: "1.2rem",
-    fontWeight: 700,
-    color: "#e5e7eb",
-    marginBottom: 24,
-  };
+  // const brandText = {
+  //   fontSize: "1.2rem",
+  //   fontWeight: 700,
+  //   color: "#e5e7eb",
+  //   marginBottom: 24,
+  // };
 
   const loginTitle = {
     fontSize: "2rem",
@@ -215,7 +219,6 @@ export default function Auth() {
         {/* LEFT: LOGIN */}
         <div style={leftPane}>
           <div>
-
             <div style={loginTitle}>Login</div>
             <div style={loginSubtitle}>Enter your account details</div>
 
@@ -251,21 +254,30 @@ export default function Auth() {
                 try {
                   let res;
                   if (activeTab === "student") {
-                    res = await axios.post("http://localhost:8080/student/slogin", { semail: email, spassword: password });
+                    res = await axios.post(
+                      "http://localhost:8080/student/slogin",
+                      { semail: email, spassword: password }
+                    );
                     if (res.data === "Login Successful") {
                       navigate("/student/dashboard");
                     } else {
                       alert(res.data);
                     }
                   } else if (activeTab === "teacher") {
-                    res = await axios.post("http://localhost:8080/auth/tlogin", { temail: email, tpassword: password });
+                    res = await axios.post(
+                      "http://localhost:8080/auth/tlogin",
+                      { temail: email, tpassword: password }
+                    );
                     if (res.data === "Login Successful") {
                       navigate("/teacher/dashboard");
                     } else {
                       alert(res.data);
                     }
                   } else if (activeTab === "admin") {
-                    res = await axios.post("http://localhost:8080/auth/login", { adminemail: email, adminpassword: password });
+                    res = await axios.post("http://localhost:8080/auth/login", {
+                      adminemail: email,
+                      adminpassword: password,
+                    });
                     if (res.data === "Login Successful") {
                       navigate("/admin/dashboard");
                     } else {
@@ -278,13 +290,24 @@ export default function Auth() {
                 }
               }}
             >
-              <label for="em" style={{fontWeight:"700"}}>Email Address:</label>
-              <input type="email" placeholder="Email"  id="em" style={formControl} value={email} onChange={(e) => setEmail(e.target.value)} />
-              <label for="ps" style={{fontWeight:"700"}} >Password:</label>
+              <label for="em" style={{ fontWeight: "700" }}>
+                Email Address:
+              </label>
+              <input
+                type="email"
+                placeholder="Email"
+                id="em"
+                style={formControl}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <label for="ps" style={{ fontWeight: "700" }}>
+                Password:
+              </label>
               <input
                 type="password"
                 placeholder="Password"
-                style={formControl} 
+                style={formControl}
                 id="ps"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -320,8 +343,22 @@ export default function Auth() {
             preserveAspectRatio="xMidYMid slice"
           >
             <circle cx="70" cy="60" r="60" fill="#ffffff" />
-            <rect x="220" y="40" width="120" height="80" rx="24" fill="#ffffff" />
-            <rect x="60" y="180" width="180" height="80" rx="26" fill="#ffffff" />
+            <rect
+              x="220"
+              y="40"
+              width="120"
+              height="80"
+              rx="24"
+              fill="#ffffff"
+            />
+            <rect
+              x="60"
+              y="180"
+              width="180"
+              height="80"
+              rx="26"
+              fill="#ffffff"
+            />
           </svg>
 
           <div style={{ position: "relative", zIndex: 1 }}>
@@ -347,7 +384,8 @@ export default function Auth() {
               }}
             >
               Login to view your{" "}
-              {activeTab === "student" && "subjects, fees, results, and notices."}
+              {activeTab === "student" &&
+                "subjects, fees, results, and notices."}
               {activeTab === "teacher" &&
                 "class schedule, attendance, and student performance."}
               {activeTab === "admin" &&

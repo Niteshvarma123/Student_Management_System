@@ -304,13 +304,13 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteTeacher = async (t) => {
+  const handleDeleteTeacher = async (teacher) => {
     try {
       await axios.delete(
-        `http://localhost:8080/teacher/delete/${t.temployeeid}`
+        `http://localhost:8080/teacher/delete/${teacher.temployeeid}`
       );
       alert("Teacher deleted successfully");
-      fetchTeachers();
+      fetchTeachers(); // refresh table
     } catch (error) {
       console.error("Delete failed:", error);
       alert("Failed to delete teacher");
