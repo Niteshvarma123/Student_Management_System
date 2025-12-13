@@ -307,7 +307,7 @@ const AdminDashboard = () => {
   const handleDeleteTeacher = async (teacher) => {
     try {
       await axios.delete(
-        `http://localhost:8080/teacher/delete/${teacher.temployeeid}`
+        `http://localhost:8080/teacher/delete/${teacher.temail}`
       );
       alert("Teacher deleted successfully");
       fetchTeachers(); // refresh table
