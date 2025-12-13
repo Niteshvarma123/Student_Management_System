@@ -34,7 +34,7 @@ export default function AppRouter() {
             <Route path="/student/dashboard" element={<StudentDashboard />} />
             <Route path="/edit/student/:srollno" element={<EditStudent />} />
             <Route
-              path="/edit/teacher/:temployeeid"
+              path="/edit/teacher/:temail"
               element={<TeacherEditForm />}
             />
           </Routes>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function TeacherEditForm() {
-  const { temployeeid } = useParams();
+  const { temail } = useParams();
   const navigate = useNavigate();
 
   const [teacher, setTeacher] = useState({
@@ -15,13 +15,13 @@ export default function TeacherEditForm() {
   // Fetch teacher data
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/teacher/${temployeeid}`)
+      .get(`http://localhost:8080/teacher/${temail}`)
       .then((res) => setTeacher(res.data))
       .catch((err) => {
         console.error("Failed to load teacher:", err);
         alert("Failed to load teacher data");
       });
-  }, [temployeeid]);
+  }, [temail]);
 
   const handleChange = (e) => {
     setTeacher({ ...teacher, [e.target.name]: e.target.value });
@@ -31,7 +31,7 @@ export default function TeacherEditForm() {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:8080/teacher/update/${temployeeid}`,
+        `http://localhost:8080/teacher/update/${temail}`,
         teacher
       );
       alert("Teacher updated successfully!");
