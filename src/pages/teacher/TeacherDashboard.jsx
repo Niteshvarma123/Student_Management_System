@@ -14,10 +14,10 @@ export default function TeacherDashboard() {
   });
 
   useEffect(() => {
-    const email = localStorage.getItem("teacherEmail");
+    const email = localStorage.getItem("temail");
 
     axios
-      .get(`http://localhost:8080/teacher/getByEmail/${email}`)
+      .get(`http://localhost:8080/teacher/${email}`)
       .then((res) => setTeacher(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -352,7 +352,7 @@ export default function TeacherDashboard() {
               ) : (
                 <>
                   <p>Name: {teacher.tname}</p>
-                  <p>Role: {teacher.role}</p>
+                  
                   <p>Email: {teacher.temail}</p>
                   <p>Phone: {teacher.tphone}</p>
                 </>
