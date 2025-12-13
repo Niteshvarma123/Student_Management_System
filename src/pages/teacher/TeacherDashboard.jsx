@@ -11,7 +11,7 @@ export default function TeacherDashboard() {
   const [teacher, setTeacher] = useState(null);
 
   useEffect(() => {
-    const email = localStorage.getItem("temail");
+    const email = localStorage.getItem("teacherEmail");
 
     axios
       .get(`http://localhost:8080/teacher/${email}`)
