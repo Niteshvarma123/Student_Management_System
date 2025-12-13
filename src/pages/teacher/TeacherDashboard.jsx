@@ -8,7 +8,10 @@ export default function TeacherDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
 
   // Profile
-  const [teacher, setTeacher] = useState(null);
+  const [teacher, setTeacher] = useState({
+    temail: "",
+    tname: "",
+  });
 
   useEffect(() => {
     const email = localStorage.getItem("teacherEmail");
