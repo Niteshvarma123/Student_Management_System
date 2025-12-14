@@ -5,6 +5,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function TeacherDashboard() {
+  const [monthlyAttendance, setMonthlyAttendance] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/attendance/monthly") // replace with your backend endpoint
+      .then((res) => setMonthlyAttendance(res.data))
+      .catch((err) => console.log("Monthly attendance fetch failed:", err));
+  }, []);
+
   const [activeSection, setActiveSection] = useState("dashboard"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
   const [editingMarkId, setEditingMarkId] = useState(null);
   const [editedMark, setEditedMark] = useState({});
@@ -307,16 +315,13 @@ export default function TeacherDashboard() {
   // Dummy logout
   const handleLogout = async () => {
     try {
-      // Call the backend logout API
-      await axios.post("http://localhost:8080/logout"); // replace with your backend URL
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("temail");
-      navigate("/auth");
+      await axios.post("http://localhost:8080/logout");
     } catch (error) {
-      console.error("Logout failed:", error);
-      alert("Logout failed. Try again.");
+      console.error(error);
     }
+    localStorage.removeItem("token");
+    localStorage.removeItem("temail");
+    navigate("/auth");
   };
 
   const navigate = useNavigate();
@@ -324,8 +329,20 @@ export default function TeacherDashboard() {
   // Different main content based on active section
   const renderContent = () => {
     if (activeSection === "attendance") {
+      // Calculate counts
+      const presentCount = monthlyAttendance.filter(
+        (a) => a.status === "present"
+      ).length;
+      const absentCount = monthlyAttendance.filter(
+        (a) => a.status === "absent"
+      ).length;
+      const holidayCount = monthlyAttendance.filter(
+        (a) => a.status === "holiday"
+      ).length;
+
       return (
         <Row className="g-3">
+          {/* Calendar on the left */}
           <Col lg={8}>
             <div style={sectionCardStyle}>
               <div style={sectionHeaderStyle}>
@@ -335,19 +352,36 @@ export default function TeacherDashboard() {
               <AttendanceCalendar />
             </div>
           </Col>
+
+          {/* Monthly summary on the right */}
           <Col lg={4}>
             <div style={sectionCardStyle}>
               <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Summary</span>
+                <span style={sectionTitleStyle}>
+                  Monthly Attendance Summary
+                </span>
               </div>
-              <p style={smallMutedText}>
-                Click on a date in the calendar to mark Present (green), Absent
-                (red) or Holiday (blue).
-              </p>
-              <p style={smallMutedText}>
-                You can extend this section later to show counts per month,
-                export attendance, etc.
-              </p>
+
+              {monthlyAttendance.length === 0 ? (
+                <p style={smallMutedText}>No attendance data available</p>
+              ) : (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                >
+                  <div style={statCardStyle}>
+                    <span style={statLabelStyle}>Present</span>
+                    <span style={statValueStyle}>{presentCount}</span>
+                  </div>
+                  <div style={statCardStyle}>
+                    <span style={statLabelStyle}>Absent</span>
+                    <span style={statValueStyle}>{absentCount}</span>
+                  </div>
+                  <div style={statCardStyle}>
+                    <span style={statLabelStyle}>Holiday</span>
+                    <span style={statValueStyle}>{holidayCount}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </Col>
         </Row>
@@ -363,7 +397,7 @@ export default function TeacherDashboard() {
 
           {/* Table Header */}
           <div style={tableHeaderStyle}>
-            <span>MID</span>
+            <span>ID</span>
             <span>Roll No</span>
             <span>Student</span>
             <span>Sub 1</span>
