@@ -7,13 +7,13 @@ export default function TeacherDashboard() {
   const navigate = useNavigate();
 
   const [attendanceList, setAttendanceList] = useState([]);
-
+const [date, setDate] = useState("2025-12-14");
   useEffect(() => {
     axios
-      .get("http://localhost:8080/attendance/students")
+      .get(`http://localhost:8080/attendance/date/${date}`)
       .then((res) => setAttendanceList(res.data))
       .catch((err) => console.error("Attendance fetch failed", err));
-  }, []);
+  }, [date]);
 
   const handleAttendanceChange = async (aid, newStatus) => {
     try {
@@ -419,7 +419,20 @@ export default function TeacherDashboard() {
         <div style={{ ...sectionCardStyle, padding: 20 }}>
           <div style={sectionHeaderStyle}>
             <span style={sectionTitleStyle}>Student Attendance</span>
-          </div>
+          
+           {/* 📅 Date Picker */}
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          style={{
+            padding: "6px 10px",
+            borderRadius: 6,
+            border: "1px solid #D1D5DB",
+            fontSize: "0.85rem",
+          }}
+        />
+      </div>
 
           {/* Table Header */}
           <div
@@ -433,9 +446,9 @@ export default function TeacherDashboard() {
               paddingBottom: 8,
             }}
           >
-            <span>Student Name</span>
+           
             <span>Roll No</span>
-            <span>Class</span>
+            <span>        </span>
             <span>Attendance</span>
           </div>
 
@@ -454,9 +467,10 @@ export default function TeacherDashboard() {
                   alignItems: "center",
                 }}
               >
-                <span>{s.studentName}</span>
-                <span>{s.rollNo}</span>
-                <span>{s.className}</span>
+                
+                <span>{s.srollno}</span>
+                <span>{s.dateattendance}</span>   
+
 
                 <select
                   value={s.status}
