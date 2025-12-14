@@ -14,7 +14,7 @@ export default function Auth() {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "#020617", // dark bg
+background: "linear-gradient(135deg, #7C3AED 0%, #86d9ffff 40%, #ed3ae4ff 100%)",
     fontFamily:
       "'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   };

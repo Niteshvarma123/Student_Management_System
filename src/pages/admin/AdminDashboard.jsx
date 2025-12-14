@@ -27,7 +27,7 @@ const styles = {
   },
   sidebar: {
     width: "240px",
-    background: "#1e2a38",
+    background: "linear-gradient(180deg, #4F46E5 0%, #6366F1 100%)",   
     color: "#fff",
     padding: "20px",
   },
@@ -50,7 +50,7 @@ const styles = {
     marginBottom: "6px",
   },
   sidebarItemActive: {
-    background: "#3b4a60",
+    background: "#6431f0ff",
   },
   logout: {
     marginTop: "180px",

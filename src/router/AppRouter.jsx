@@ -6,7 +6,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
 import Footer from "../components/Footer/Footer.jsx";
 
 import ContactForm from "../pages/contact/Contact.jsx";
-import About from "../pages/about/Aboutus.jsx";
+import About from "../pages/about/About us.jsx";
 
 import StudentDashboard from "../pages/student/StudentDashboard.jsx";
 import TeacherDashboard from "../pages/teacher/TeacherDashboard.jsx";

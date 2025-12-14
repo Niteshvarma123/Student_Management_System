@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 
 export default function ContactForm() {
-  const [form, setForm] = useState({
+ const [form, setForm] = useState({
     firstName: "",
     email: "",
     mobile: "",

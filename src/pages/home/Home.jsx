@@ -2,7 +2,9 @@ import React from "react";
 import { Container, Row, Col, Card, Button, Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import img1 from "../../assets/banner1.jpg";
-import img2 from "../../assets/banner2.jpg";
+import img2 from "../../assets/banner4.jpg";
+import img3 from "../../assets/banner3.jpg";
+import img4 from "../../assets/banner5.jpg";
 import AnimatedCard from "../../components/Animated card";
 
 export default function Home() {
@@ -57,7 +59,7 @@ export default function Home() {
         display: "flex",
         flexDirection: "row",            // TEXT LEFT, IMAGE RIGHT
         alignItems: "center",
-        padding: "120px 60px",
+        padding: "145px 60px",
         color: "white",
       }}
     >
@@ -102,13 +104,63 @@ export default function Home() {
       style={{
         width: "100%",
         height: "100%",
+        backgroundImage: `url(${img3})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        flexDirection: "row",            // TEXT LEFT, IMAGE RIGHT
+        alignItems: "center",
+        padding: "145px 60px",
+        color: "white",
+      }}
+    >
+      {/* TEXT (LEFT) */}
+      <div style={{ maxWidth: "600px" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: "800", marginBottom: "18px" }}>
+          Transform The Way You Manage Students
+        </h1>
+
+        <p style={{ fontSize: "1.25rem", opacity: 0.9, marginBottom: "28px" }}>
+          A powerful, intuitive platform for managing admissions, attendance,
+          communication, analytics, and student engagement — all in one place.
+        </p>
+
+        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <Link to="/">
+            <Button
+              style={{
+                backgroundColor: "#ff5a3c",
+                borderColor: "#ff5a3c",
+                padding: "12px 24px",
+                borderRadius: "8px",
+              }}
+            >
+              Get Started
+            </Button>
+          </Link>
+
+          <Link to="/about">
+            <Button variant="light" style={{ padding: "12px 24px", borderRadius: "8px" }}>
+              Learn More
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  </Carousel.Item>
+
+  <Carousel.Item>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
         backgroundImage: `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${img2})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
         flexDirection: "row-reverse",     // TEXT RIGHT, IMAGE LEFT
         alignItems: "center",
-        padding: "120px 60px",
+        padding: "160px 60px",
         color: "white",
       }}
     >
@@ -150,8 +202,55 @@ export default function Home() {
           </Link>
         </div>
       </div>
+    </div>
+  </Carousel.Item>
+   <Carousel.Item>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        backgroundImage: `url(${img4})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        flexDirection: "row",            // TEXT LEFT, IMAGE RIGHT
+        alignItems: "center",
+        padding: "145px 60px",
+        color: "white",
+      }}
+    >
+      {/* TEXT (LEFT) */}
+      <div style={{ maxWidth: "600px" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: "800", marginBottom: "18px" }}>
+          Transform The Way You Manage Students
+        </h1>
 
-      
+        <p style={{ fontSize: "1.25rem", opacity: 0.9, marginBottom: "28px" }}>
+          A powerful, intuitive platform for managing admissions, attendance,
+          communication, analytics, and student engagement — all in one place.
+        </p>
+
+        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <Link to="/">
+            <Button
+              style={{
+                backgroundColor: "#ff5a3c",
+                borderColor: "#ff5a3c",
+                padding: "12px 24px",
+                borderRadius: "8px",
+              }}
+            >
+              Get Started
+            </Button>
+          </Link>
+
+          <Link to="/about">
+            <Button variant="light" style={{ padding: "12px 24px", borderRadius: "8px" }}>
+              Learn More
+            </Button>
+          </Link>
+        </div>
+      </div>
     </div>
   </Carousel.Item>
 </Carousel>
