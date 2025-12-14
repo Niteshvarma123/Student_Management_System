@@ -45,7 +45,7 @@ export default function TeacherDashboard() {
   useEffect(() => {
     const temail = localStorage.getItem("temail");
 
-    if (!email) {
+    if (!temail) {
       console.error("Teacher email missing in localStorage");
       return;
     }
@@ -505,7 +505,7 @@ export default function TeacherDashboard() {
                 <>
                   <p>Name: {teacher.tname}</p>
                   <p>Email: {teacher.temail}</p>
-                  <p>Phone: {teacher.tphone}</p>
+                  <p>Subject: Full Stack Java & Python</p>
                 </>
               )}
             </div>
