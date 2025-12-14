@@ -6,6 +6,35 @@ import axios from "axios";
 
 export default function TeacherDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
+  const [editingMarkId, setEditingMarkId] = useState(null);
+  const [editedMark, setEditedMark] = useState({});
+  const handleEditClick = (mark) => {
+    setEditingMarkId(mark.id); // or mark.mid depending on backend
+    setEditedMark({ ...mark });
+  };
+
+  const handleMarkChange = (e) => {
+    setEditedMark({ ...editedMark, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveMark = async () => {
+    try {
+      await axios.put(
+        `http://localhost:8080/marks/update/${editingMarkId}`,
+        editedMark
+      );
+
+      // refresh marks after update
+      const res = await axios.get("http://localhost:8080/marks/all");
+      setMarks(res.data);
+
+      setEditingMarkId(null);
+      alert("Marks updated successfully");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update marks");
+    }
+  };
 
   // Profile
   const [teacher, setTeacher] = useState({
@@ -321,15 +350,58 @@ export default function TeacherDashboard() {
           {marks.length === 0 ? (
             <p>No marks available</p>
           ) : (
-            marks.map((m, index) => (
-              <div key={index} style={tableRowStyle}>
+            marks.map((m) => (
+              <div key={m.id} style={tableRowStyle}>
                 <span>{m.studentName}</span>
                 <span>{m.className}</span>
                 <span>{m.examType}</span>
+
                 <span>
-                  <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
-                    {m.marks} / {m.totalMarks}
-                  </span>
+                  {editingMarkId === m.id ? (
+                    <input
+                      type="number"
+                      name="marks"
+                      value={editedMark.marks}
+                      onChange={handleMarkChange}
+                      style={{ width: "70px" }}
+                    />
+                  ) : (
+                    <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
+                      {m.marks} / {m.totalMarks}
+                    </span>
+                  )}
+                </span>
+
+                <span>
+                  {editingMarkId === m.id ? (
+                    <button
+                      onClick={handleSaveMark}
+                      style={{
+                        padding: "4px 10px",
+                        background: "#16A34A",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleEditClick(m)}
+                      style={{
+                        padding: "4px 10px",
+                        background: "#4F46E5",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
                 </span>
               </div>
             ))
@@ -352,7 +424,6 @@ export default function TeacherDashboard() {
               ) : (
                 <>
                   <p>Name: {teacher.tname}</p>
-                  
                   <p>Email: {teacher.temail}</p>
                   <p>Phone: {teacher.tphone}</p>
                 </>
@@ -572,7 +643,6 @@ export default function TeacherDashboard() {
               </div>
             </div>
           </div>
-
           {renderContent()}
         </Container>
       </main>
