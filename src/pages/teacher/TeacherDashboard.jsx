@@ -51,7 +51,7 @@ export default function TeacherDashboard() {
   });
 
   useEffect(() => {
-    const email = localStorage.getItem("temail");
+    const temail = localStorage.getItem("temail");
 
     if (!temail) {
       console.error("Teacher email missing in localStorage");
@@ -59,7 +59,7 @@ export default function TeacherDashboard() {
     }
 
     axios
-      .get(`http://localhost:8080/teacher/${email}`)
+      .get(`http://localhost:8080/teacher/${temail}`)
       .then((res) => setTeacher(res.data))
       .catch((err) =>
         console.error("Teacher profile fetch failed", err.response || err)
