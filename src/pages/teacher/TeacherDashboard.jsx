@@ -8,13 +8,16 @@ export default function TeacherDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
 
   // Profile
-  const [teacher, setTeacher] = useState(null);
+  const [teacher, setTeacher] = useState({
+    temail:"",
+    tname:""
+  });
 
   useEffect(() => {
-    const email = localStorage.getItem("teacherEmail");
+    const temail = localStorage.getItem("temail");
 
     axios
-      .get(`http://localhost:8080/teacher/${email}`)
+      .get(`http://localhost:8080/teacher/${temail}`)
       .then((res) => setTeacher(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -251,7 +254,7 @@ export default function TeacherDashboard() {
   const handleLogout = async () => {
     try {
       // Call the backend logout API
-      await axios.post("http://localhost:8080/logout"); // replace with your backend URL
+      await axios.post("http://localhost:8080/auth/tlogout"); // replace with your backend URL
 
       // Optionally, clear any stored auth info
       localStorage.removeItem("token"); // if using JWT/session storage
