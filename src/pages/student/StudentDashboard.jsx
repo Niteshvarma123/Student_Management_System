@@ -277,11 +277,11 @@ export default function StudentDashboard() {
   const handleLogout = async () => {
     try {
       // Call backend logout endpoint
-      await axios.post("http://localhost:8080/logout"); // Replace with your backend URL
+      await axios.post("http://localhost:8080/student/slogout"); // Replace with your backend URL
 
       // Clear any stored user info
-      localStorage.removeItem("token"); // if using JWT
-      localStorage.removeItem("userName");
+       localStorage.removeItem("token"); // adjust key if needed
+      sessionStorage.clear();
 
       // Redirect to auth page
       navigate("/auth");

@@ -51,7 +51,7 @@ export default function TeacherDashboard() {
   });
 
   useEffect(() => {
-    const email = localStorage.getItem("temail");
+    const temail = localStorage.getItem("temail");
 
     if (!email) {
       console.error("Teacher email missing in localStorage");
@@ -59,7 +59,7 @@ export default function TeacherDashboard() {
     }
 
     axios
-      .get(`http://localhost:8080/teacher/${email}`)
+      .get(`http://localhost:8080/teacher/${temail}`)
       .then((res) => setTeacher(res.data))
       .catch((err) =>
         console.error("Teacher profile fetch failed", err.response || err)
@@ -315,7 +315,12 @@ export default function TeacherDashboard() {
   // Dummy logout
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8080/logout");
+      // Call the backend logout API
+      await axios.post("http://localhost:8080/logout"); // replace with your backend URL
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("temail");
+      navigate("/auth");
     } catch (error) {
       console.error(error);
     }
