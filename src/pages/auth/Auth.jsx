@@ -268,7 +268,11 @@ export default function Auth() {
                       "http://localhost:8080/auth/tlogin",
                       { temail: email, tpassword: password }
                     );
+
                     if (res.data === "Login Successful") {
+                      // ✅ STORE EMAIL (THIS FIXES PROFILE)
+                      localStorage.setItem("temail", email);
+
                       navigate("/teacher/dashboard");
                     } else {
                       alert(res.data);
@@ -290,7 +294,7 @@ export default function Auth() {
                 }
               }}
             >
-              <label for="em" style={{ fontWeight: "700" }}>
+              <label htmlFor="em" style={{ fontWeight: "700" }}>
                 Email Address:
               </label>
               <input
@@ -301,7 +305,7 @@ export default function Auth() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <label for="ps" style={{ fontWeight: "700" }}>
+              <label htmlFor="ps" style={{ fontWeight: "700" }}>
                 Password:
               </label>
               <input
