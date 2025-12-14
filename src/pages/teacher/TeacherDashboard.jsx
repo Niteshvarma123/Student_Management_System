@@ -9,7 +9,7 @@ export default function TeacherDashboard() {
   const [editingMarkId, setEditingMarkId] = useState(null);
   const [editedMark, setEditedMark] = useState({});
   const handleEditClick = (mark) => {
-    setEditingMarkId(mark.id); // or mark.mid depending on backend
+    setEditingMarkId(mark.mid); // ✅ correct key
     setEditedMark({ ...mark });
   };
 
@@ -45,10 +45,17 @@ export default function TeacherDashboard() {
   useEffect(() => {
     const temail = localStorage.getItem("temail");
 
+    if (!email) {
+      console.error("Teacher email missing in localStorage");
+      return;
+    }
+
     axios
       .get(`http://localhost:8080/teacher/${temail}`)
       .then((res) => setTeacher(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        console.error("Teacher profile fetch failed", err.response || err)
+      );
   }, []);
 
   // Marks
@@ -60,6 +67,20 @@ export default function TeacherDashboard() {
       .then((res) => setMarks(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  const calculateTotal = (m) => {
+    return (
+      (Number(m.marks1) || 0) +
+      (Number(m.marks2) || 0) +
+      (Number(m.marks3) || 0)
+    );
+  };
+
+  const calculatePercentage = (m) => {
+    const total = calculateTotal(m);
+    const maxTotal = 300; // 3 subjects × 100
+    return ((total / maxTotal) * 100).toFixed(2);
+  };
 
   // Layout styles
   const layoutStyle = {
@@ -228,32 +249,36 @@ export default function TeacherDashboard() {
 
   const tableHeaderStyle = {
     display: "grid",
-    gridTemplateColumns: "2fr 1fr 1fr 1fr",
+    gridTemplateColumns:
+      "0.5fr 1fr 2fr 1.5fr 1fr 1.5fr 1fr 1.5fr 1fr 1fr 1fr 1fr",
     fontSize: "0.78rem",
     textTransform: "uppercase",
     letterSpacing: "0.06em",
-    color: "#9CA3AF",
+    color: "#4B5563", // darker gray
+    fontWeight: 600, // optional, make it bold
     padding: "8px 0",
     borderBottom: "1px solid #E5E7EB",
+    background: "#F9FAFB",
   };
 
   const tableRowStyle = {
     display: "grid",
-    gridTemplateColumns: "2fr 1fr 1fr 1fr",
+    gridTemplateColumns:
+      "0.5fr 1fr 2fr 1.5fr 1fr 1.5fr 1fr 1.5fr 1fr 1fr 1fr 1fr",
     fontSize: "0.9rem",
     padding: "10px 0",
     borderBottom: "1px solid #F3F4F6",
     alignItems: "center",
   };
 
-  const chipStyle = (bg, color) => ({
-    display: "inline-block",
-    padding: "4px 10px",
-    borderRadius: 999,
-    fontSize: "0.75rem",
-    background: bg,
-    color: color,
-  });
+  // const chipStyle = (bg, color) => ({
+  //   display: "inline-block",
+  //   padding: "4px 10px",
+  //   borderRadius: 999,
+  //   fontSize: "0.75rem",
+  //   background: bg,
+  //   color: color,
+  // });
 
   const smallMutedText = {
     fontSize: "0.8rem",
@@ -285,10 +310,8 @@ export default function TeacherDashboard() {
       // Call the backend logout API
       await axios.post("http://localhost:8080/auth/tlogout"); // replace with your backend URL
 
-      // Optionally, clear any stored auth info
-      localStorage.removeItem("token"); // if using JWT/session storage
-
-      // Redirect to auth page
+      localStorage.removeItem("token");
+      localStorage.removeItem("temail");
       navigate("/auth");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -340,10 +363,18 @@ export default function TeacherDashboard() {
 
           {/* Table Header */}
           <div style={tableHeaderStyle}>
+            <span>MID</span>
+            <span>Roll No</span>
             <span>Student</span>
-            <span>Class</span>
-            <span>Exam</span>
-            <span>Marks</span>
+            <span>Sub 1</span>
+            <span>M1</span>
+            <span>Sub 2</span>
+            <span>M2</span>
+            <span>Sub 3</span>
+            <span>M3</span>
+            <span>Total</span>
+            <span>%</span>
+            <span>Action</span>
           </div>
 
           {/* Table Data */}
@@ -351,37 +382,87 @@ export default function TeacherDashboard() {
             <p>No marks available</p>
           ) : (
             marks.map((m) => (
-              <div key={m.id} style={tableRowStyle}>
-                <span>{m.studentName}</span>
-                <span>{m.className}</span>
-                <span>{m.examType}</span>
+              <div key={m.mid} style={tableRowStyle}>
+                <span>{m.mid}</span>
+                <span>{m.srollno}</span>
+                <span>{m.studentname}</span>
 
+                <span>{m.subject1}</span>
                 <span>
-                  {editingMarkId === m.id ? (
+                  {editingMarkId === m.mid ? (
                     <input
+                      name="marks1"
                       type="number"
-                      name="marks"
-                      value={editedMark.marks}
+                      value={editedMark.marks1}
                       onChange={handleMarkChange}
-                      style={{ width: "70px" }}
+                      style={{ width: 60 }}
                     />
                   ) : (
-                    <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
-                      {m.marks} / {m.totalMarks}
-                    </span>
+                    m.marks1
                   )}
                 </span>
 
+                <span>{m.subject2}</span>
                 <span>
-                  {editingMarkId === m.id ? (
+                  {editingMarkId === m.mid ? (
+                    <input
+                      name="marks2"
+                      type="number"
+                      value={editedMark.marks2}
+                      onChange={handleMarkChange}
+                      style={{ width: 60 }}
+                    />
+                  ) : (
+                    m.marks2
+                  )}
+                </span>
+
+                <span>{m.subject3}</span>
+                <span>
+                  {editingMarkId === m.mid ? (
+                    <input
+                      name="marks3"
+                      type="number"
+                      value={editedMark.marks3}
+                      onChange={handleMarkChange}
+                      style={{ width: 60 }}
+                    />
+                  ) : (
+                    m.marks3
+                  )}
+                </span>
+
+                {/* TOTAL (frontend calculated) */}
+                <span style={{ fontWeight: 700 }}>
+                  {editingMarkId === m.mid
+                    ? Number(editedMark.marks1 || 0) +
+                      Number(editedMark.marks2 || 0) +
+                      Number(editedMark.marks3 || 0)
+                    : calculateTotal(m)}
+                </span>
+                {/* PERCENTAGE */}
+                <span style={{ fontWeight: 600 }}>
+                  {editingMarkId === m.mid
+                    ? (
+                        ((Number(editedMark.marks1 || 0) +
+                          Number(editedMark.marks2 || 0) +
+                          Number(editedMark.marks3 || 0)) /
+                          300) *
+                        100
+                      ).toFixed(2) + "%"
+                    : calculatePercentage(m) + "%"}
+                </span>
+
+                {/* ACTION */}
+                <span>
+                  {editingMarkId === m.mid ? (
                     <button
                       onClick={handleSaveMark}
                       style={{
-                        padding: "4px 10px",
                         background: "#16A34A",
                         color: "#fff",
                         border: "none",
-                        borderRadius: "6px",
+                        padding: "4px 10px",
                         cursor: "pointer",
                       }}
                     >
@@ -391,11 +472,10 @@ export default function TeacherDashboard() {
                     <button
                       onClick={() => handleEditClick(m)}
                       style={{
-                        padding: "4px 10px",
                         background: "#4F46E5",
                         color: "#fff",
                         border: "none",
-                        borderRadius: "6px",
+                        padding: "4px 10px",
                         cursor: "pointer",
                       }}
                     >
@@ -419,7 +499,7 @@ export default function TeacherDashboard() {
                 <span style={sectionTitleStyle}>Profile</span>
               </div>
 
-              {!teacher ? (
+              {!teacher.temail ? (
                 <p>Loading...</p>
               ) : (
                 <>
