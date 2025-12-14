@@ -1,24 +1,92 @@
 // StudentDashboard.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  ProgressBar,
-} from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
 
-  const [activeSection, setActiveSection] = useState("dashboard");
-  // 'dashboard' | 'courses' | 'attendance' | 'marks' | 'payments' | 'profile'
+  const [activeSection, setActiveSection] = useState("profile");
+  const [student, setStudent] = useState({
+    srollno: "",
+    sname: "",
+    semail: "",
+    sphone: "",
+    saddress: "",
+  });
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [marks, setMarks] = useState([]);
+  const [attendanceList, setAttendanceList] = useState([]);
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
+
+  const srollno = localStorage.getItem("srollno");
+
+  /** Fetch student profile and marks on component mount */
+  useEffect(() => {
+    if (!srollno) {
+      setLoadingProfile(false);
+      return;
+    }
+
+    // Profile fetch
+    axios
+      .get(`http://localhost:8080/student/${srollno}`)
+      .then((res) => res.data && setStudent(res.data))
+      .catch((err) => console.error("Profile fetch failed:", err))
+      .finally(() => setLoadingProfile(false));
+
+    // Marks fetch
+    axios
+      .get(`http://localhost:8080/marks/student/${srollno}`)
+      .then((res) => setMarks(res.data))
+      .catch((err) => console.error("Marks fetch failed:", err));
+  }, [srollno]);
+
+  /** Fetch attendance whenever date changes */
+  useEffect(() => {
+    if (!srollno) return;
+
+    axios
+      .get(`http://localhost:8080/attendance/student/${srollno}/${date}`)
+      .then((res) => setAttendanceList(res.data))
+      .catch((err) => console.error("Attendance fetch failed:", err));
+  }, [srollno, date]);
 
   /** LAYOUT & SIDEBAR STYLES **/
   const userName = localStorage.getItem("userName") || "User";
+  const calculateTotal = (m) =>
+    (Number(m.marks1) || 0) + (Number(m.marks2) || 0) + (Number(m.marks3) || 0);
+
+  const calculatePercentage = (m) => {
+    const total = calculateTotal(m);
+    return ((total / 300) * 100).toFixed(2); // assuming 3 subjects each 100 marks
+  };
+
+  // Add this state at the top with other states
+  const [feeData, setFeeData] = useState({
+    totalFee: 0,
+    paidFee: 0,
+    recentPayments: [],
+  });
+
+  // Fetch fee data from backend
+  useEffect(() => {
+    if (!srollno) return;
+
+    axios
+      .get(`http://localhost:8080/payments/student/${srollno}`)
+      .then((res) => {
+        if (res.data) {
+          setFeeData({
+            totalFee: res.data.totalFee || 0,
+            paidFee: res.data.paidFee || 0,
+            recentPayments: res.data.recentPayments || [],
+          });
+        }
+      })
+      .catch((err) => console.error("Fee data fetch failed:", err));
+  }, [srollno]);
 
   const layoutStyle = {
     display: "flex",
@@ -39,18 +107,6 @@ export default function StudentDashboard() {
     fontFamily: "Inter, sans-serif", // Smooth clean font
   };
 
-  const sidebarTopStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-  };
-
-  const sidebarTitleStyle = {
-    fontSize: "1.5rem",
-    fontWeight: 500,
-    marginBottom: 8,
-  };
-
   const sidebarItemStyle = (isActive) => ({
     padding: "12px 14px",
     borderRadius: 12,
@@ -68,12 +124,6 @@ export default function StudentDashboard() {
       background: "rgba(255,255,255,0.25)",
       color: "#FFFFFF",
     },
-  });
-
-  const iconStyle = (isActive) => ({
-    fontSize: "1.05rem",
-    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.55)",
-    transition: "0.2s ease",
   });
 
   // const bulletStyle = {
@@ -137,11 +187,6 @@ export default function StudentDashboard() {
     marginBottom: 4,
   };
 
-  const bannerSubtitleStyle = {
-    fontSize: "0.9rem",
-    opacity: 0.95,
-  };
-
   const bannerRightStyle = {
     fontSize: "2.4rem",
   };
@@ -155,40 +200,6 @@ export default function StudentDashboard() {
   const subtitleStyle = {
     fontSize: "0.85rem",
     color: "#6B7280",
-  };
-
-  const statCardStyle = {
-    borderRadius: 12,
-    border: "1px solid #F4F6F8",
-    padding: "16px 18px",
-    boxShadow: "0 6px 18px rgba(22,37,68,0.04)",
-    background: "white",
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    height: "100%",
-  };
-
-  const statLabelStyle = {
-    fontSize: "0.8rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.04em",
-    color: "#6B7280",
-  };
-
-  const statValueStyle = {
-    fontSize: "1.5rem",
-    fontWeight: 700,
-    color: "#111827",
-  };
-
-  const statChipStyle = {
-    fontSize: "0.75rem",
-    padding: "2px 8px",
-    borderRadius: 999,
-    background: "rgba(16,185,129,0.12)",
-    color: "#059669",
-    alignSelf: "flex-start",
   };
 
   const sectionCardStyle = {
@@ -212,41 +223,6 @@ export default function StudentDashboard() {
     fontWeight: 700,
     color: "#111827",
   };
-
-  const sectionLinkStyle = {
-    fontSize: "0.8rem",
-    color: "#4B5563",
-    cursor: "pointer",
-  };
-
-  const tableHeaderStyle = {
-    display: "grid",
-    gridTemplateColumns: "2fr 1fr 1fr",
-    fontSize: "0.78rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.06em",
-    color: "#9CA3AF",
-    padding: "8px 0",
-    borderBottom: "1px solid #E5E7EB",
-  };
-
-  const tableRowStyle = {
-    display: "grid",
-    gridTemplateColumns: "2fr 1fr 1fr",
-    fontSize: "0.9rem",
-    padding: "10px 0",
-    borderBottom: "1px solid #F3F4F6",
-    alignItems: "center",
-  };
-
-  const chipStyle = (bg, color) => ({
-    display: "inline-block",
-    padding: "4px 10px",
-    borderRadius: 999,
-    fontSize: "0.75rem",
-    background: bg,
-    color: color,
-  });
 
   const smallMutedText = {
     fontSize: "0.8rem",
@@ -272,16 +248,37 @@ export default function StudentDashboard() {
     color: "#6B7280",
   };
 
+  const profileLabel = {
+    fontSize: "0.75rem",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    color: "#6B7280",
+    marginBottom: 4,
+  };
+
+  const profileValue = {
+    fontSize: "0.95rem",
+    fontWeight: 600,
+    color: "#111827",
+    background: "#F9FAFB",
+    padding: "10px 12px",
+    borderRadius: 8,
+    border: "1px solid #E5E7EB",
+  };
+
   /** LOGOUT HANDLER **/
 
   const handleLogout = async () => {
     try {
       // Call backend logout endpoint
-      await axios.post("http://localhost:8080/logout"); // Replace with your backend URL
+      await axios.post("http://localhost:8080/student/slogout"); // Replace with your backend URL
 
       // Clear any stored user info
-      localStorage.removeItem("token"); // if using JWT
+      localStorage.removeItem("token");
+      localStorage.removeItem("srollno");
       localStorage.removeItem("userName");
+      sessionStorage.clear();
+      navigate("/auth");
 
       // Redirect to auth page
       navigate("/auth");
@@ -294,219 +291,72 @@ export default function StudentDashboard() {
   /** MAIN CONTENT BASED ON ACTIVE SECTION **/
 
   const renderContent = () => {
-    if (activeSection === "courses") {
+    if (activeSection === "profile") {
+      if (loadingProfile) {
+        return <p style={{ color: "#6B7280" }}>Loading profile...</p>;
+      }
+
       return (
         <Row className="g-3">
-          <Col lg={8}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Enrolled Courses</span>
-                <span style={sectionLinkStyle}>View all</span>
-              </div>
-
-              <div style={tableHeaderStyle}>
-                <span>Course</span>
-                <span>Code</span>
-                <span>Progress</span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Object Oriented Programming</span>
-                <span>CSE201</span>
-                <span>
-                  <ProgressBar
-                    now={72}
-                    style={{ height: 6, borderRadius: 999 }}
-                  />
-                </span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Database Management Systems</span>
-                <span>CSE210</span>
-                <span>
-                  <ProgressBar
-                    now={54}
-                    variant="info"
-                    style={{ height: 6, borderRadius: 999 }}
-                  />
-                </span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Discrete Mathematics</span>
-                <span>MTH205</span>
-                <span>
-                  <ProgressBar
-                    now={88}
-                    variant="success"
-                    style={{ height: 6, borderRadius: 999 }}
-                  />
-                </span>
-              </div>
-            </div>
-          </Col>
-
+          {/* LEFT CARD */}
           <Col lg={4}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Today&apos;s Classes</span>
-              </div>
-
-              <div style={listItemRow}>
-                <div>
-                  <div style={listTitle}>OOP Lab</div>
-                  <div style={smallMutedText}>10:00–11:30 AM • Lab 3</div>
-                </div>
-                <div style={listRightText}>Present</div>
-              </div>
-
-              <div style={listItemRow}>
-                <div>
-                  <div style={listTitle}>DBMS</div>
-                  <div style={smallMutedText}>1:30–2:30 PM • Room 204</div>
-                </div>
-                <div style={listRightText}>Upcoming</div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      );
-    }
-
-    if (activeSection === "marks") {
-      return (
-        <Row className="g-3">
-          <Col lg={12}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Marks & Grades</span>
-                <span style={sectionLinkStyle}>Download Marksheet</span>
-              </div>
-
-              <div style={tableHeaderStyle}>
-                <span>Course</span>
-                <span>Exam</span>
-                <span>Marks</span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>OOP</span>
-                <span>Mid Term</span>
-                <span>
-                  <span style={chipStyle("rgba(16,185,129,0.1)", "#059669")}>
-                    86 / 100
-                  </span>
-                </span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>DBMS</span>
-                <span>Unit Test</span>
-                <span>
-                  <span style={chipStyle("rgba(59,130,246,0.1)", "#1D4ED8")}>
-                    78 / 100
-                  </span>
-                </span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Discrete Maths</span>
-                <span>Mid Term</span>
-                <span>
-                  <span style={chipStyle("rgba(251,191,36,0.1)", "#B45309")}>
-                    Pending
-                  </span>
-                </span>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      );
-    }
-
-    if (activeSection === "payments") {
-      return (
-        <Row className="g-3">
-          <Col lg={6}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Fee Summary</span>
-              </div>
-              <p style={smallMutedText}>Total Fee: ₹ 80,000</p>
-              <p style={smallMutedText}>Paid: ₹ 60,000</p>
-              <p style={smallMutedText}>Pending: ₹ 20,000</p>
-
-              <Button
+            <div
+              style={{ ...sectionCardStyle, textAlign: "center", padding: 28 }}
+            >
+              <div
                 style={{
-                  marginTop: 12,
-                  backgroundColor: "#FF5A3C",
-                  borderColor: "#FF5A3C",
-                  borderRadius: 999,
-                  padding: "8px 18px",
-                  fontSize: "0.9rem",
+                  width: 90,
+                  height: 90,
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg,#9a1dd8ff,#591f7aff)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#fff",
+                  fontSize: "2.2rem",
+                  fontWeight: 700,
+                  margin: "0 auto 14px",
                 }}
               >
-                Pay Now
-              </Button>
+                {student.sname ? student.sname.charAt(0).toUpperCase() : "S"}
+              </div>
+
+              <h5 style={{ fontWeight: 700 }}>{student.sname || "—"}</h5>
+              <p style={{ fontSize: "0.8rem", color: "#6B7280" }}>
+                Roll No: <strong>{student.srollno || "—"}</strong>
+              </p>
             </div>
           </Col>
 
-          <Col lg={6}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Recent Payments</span>
-              </div>
+          {/* RIGHT DETAILS */}
+          <Col lg={8}>
+            <div style={{ ...sectionCardStyle, padding: 24 }}>
+              <span style={sectionTitleStyle}>Profile Information</span>
 
-              <div style={listItemRow}>
-                <div>
-                  <div style={listTitle}>Semester Fee</div>
-                  <div style={smallMutedText}>₹ 40,000 • 12 Aug 2025</div>
-                </div>
-                <div style={listRightText}>Success</div>
-              </div>
-
-              <div style={listItemRow}>
-                <div>
-                  <div style={listTitle}>Hostel Fee</div>
-                  <div style={smallMutedText}>₹ 20,000 • 01 Jul 2025</div>
-                </div>
-                <div style={listRightText}>Success</div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      );
-    }
-
-    if (activeSection === "attendance") {
-      return (
-        <Row className="g-3">
-          <Col lg={12}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Attendance Summary</span>
-                <span style={sectionLinkStyle}>This Semester</span>
-              </div>
-
-              <Row className="g-3">
-                <Col md={4}>
-                  <Card style={{ ...statCardStyle, boxShadow: "none" }}>
-                    <span style={statLabelStyle}>Overall</span>
-                    <span style={statValueStyle}>92%</span>
-                  </Card>
+              <Row className="g-3 mt-2">
+                <Col md={6}>
+                  <div style={profileLabel}>Roll Number</div>
+                  <div style={profileValue}>{student.srollno || "—"}</div>
                 </Col>
-                <Col md={4}>
-                  <Card style={{ ...statCardStyle, boxShadow: "none" }}>
-                    <span style={statLabelStyle}>OOP</span>
-                    <span style={statValueStyle}>88%</span>
-                  </Card>
+
+                <Col md={6}>
+                  <div style={profileLabel}>Full Name</div>
+                  <div style={profileValue}>{student.sname || "—"}</div>
                 </Col>
-                <Col md={4}>
-                  <Card style={{ ...statCardStyle, boxShadow: "none" }}>
-                    <span style={statLabelStyle}>DBMS</span>
-                    <span style={statValueStyle}>95%</span>
-                  </Card>
+
+                <Col md={6}>
+                  <div style={profileLabel}>Email</div>
+                  <div style={profileValue}>{student.semail || "—"}</div>
+                </Col>
+
+                <Col md={6}>
+                  <div style={profileLabel}>Phone</div>
+                  <div style={profileValue}>{student.sphone || "—"}</div>
+                </Col>
+
+                <Col md={12}>
+                  <div style={profileLabel}>Address</div>
+                  <div style={profileValue}>{student.saddress || "—"}</div>
                 </Col>
               </Row>
             </div>
@@ -515,126 +365,264 @@ export default function StudentDashboard() {
       );
     }
 
-    if (activeSection === "profile") {
+    if (activeSection === "marks") {
+      return (
+        <div style={{ ...sectionCardStyle, padding: 20 }}>
+          <div style={sectionHeaderStyle}>
+            <span style={sectionTitleStyle}>Marks Overview</span>
+          </div>
+
+          {/* Table Header */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "0.5fr 1fr 2fr 1.5fr 1fr 1.5fr 1fr 1.5fr 1fr 1fr 1fr",
+              fontSize: "0.78rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              color: "#4B5563",
+              fontWeight: 600,
+              padding: "8px 0",
+              borderBottom: "1px solid #E5E7EB",
+              background: "#F9FAFB",
+            }}
+          >
+            <span>ID</span>
+            <span>Roll No</span>
+            <span>Student</span>
+            <span>Sub 1</span>
+            <span>M1</span>
+            <span>Sub 2</span>
+            <span>M2</span>
+            <span>Sub 3</span>
+            <span>M3</span>
+            <span>Total</span>
+            <span>%</span>
+          </div>
+
+          {/* Table Rows */}
+          {marks.length === 0 ? (
+            <p style={{ marginTop: 12 }}>No marks available</p>
+          ) : (
+            marks.map((m) => (
+              <div
+                key={m.mid}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns:
+                    "0.5fr 1fr 2fr 1.5fr 1fr 1.5fr 1fr 1.5fr 1fr 1fr 1fr",
+                  fontSize: "0.9rem",
+                  padding: "10px 0",
+                  borderBottom: "1px solid #F3F4F6",
+                  alignItems: "center",
+                }}
+              >
+                <span>{m.mid}</span>
+                <span>{m.srollno}</span>
+                <span>{m.studentname}</span>
+                <span>{m.subject1}</span>
+                <span>{m.marks1}</span>
+                <span>{m.subject2}</span>
+                <span>{m.marks2}</span>
+                <span>{m.subject3}</span>
+                <span>{m.marks3}</span>
+                <span style={{ fontWeight: 700 }}>{calculateTotal(m)}</span>
+                <span style={{ fontWeight: 600 }}>
+                  {calculatePercentage(m)}%
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      );
+    }
+
+    if (activeSection === "payments") {
+      const { totalFee, paidFee, recentPayments } = feeData;
+      const unpaidFee = totalFee - paidFee;
+
       return (
         <Row className="g-3">
-          <Col lg={6}>
+          {/* Total Fee */}
+          <Col lg={4}>
             <div style={sectionCardStyle}>
               <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Profile</span>
+                <span style={sectionTitleStyle}>Total Fee</span>
               </div>
-              <p style={smallMutedText}>Name: John Doe</p>
-              <p style={smallMutedText}>Roll No: 21CSE034</p>
-              <p style={smallMutedText}>Program: B.Tech Computer Science</p>
-              <p style={smallMutedText}>Year: 3rd Year</p>
-              <p style={smallMutedText}>Email: john.doe@example.com</p>
+              <p style={{ fontSize: "1.2rem", fontWeight: 700 }}>
+                ₹ {totalFee}
+              </p>
+            </div>
+          </Col>
+
+          {/* Paid Fee */}
+          <Col lg={4}>
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <span style={sectionTitleStyle}>Paid</span>
+              </div>
+              <p
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: 700,
+                  color: "#16A34A",
+                }}
+              >
+                ₹ {paidFee}
+              </p>
+            </div>
+          </Col>
+
+          {/* Unpaid Fee */}
+          <Col lg={4}>
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <span style={sectionTitleStyle}>Unpaid</span>
+              </div>
+              <p
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: 700,
+                  color: "#DC2626",
+                }}
+              >
+                ₹ {unpaidFee}
+              </p>
+              {unpaidFee > 0 && (
+                <Button
+                  style={{
+                    marginTop: 12,
+                    backgroundColor: "#FF5A3C",
+                    borderColor: "#FF5A3C",
+                    borderRadius: 999,
+                    padding: "8px 18px",
+                    fontSize: "0.9rem",
+                  }}
+                  onClick={() => alert("Redirect to payment gateway")}
+                >
+                  Pay Now
+                </Button>
+              )}
+            </div>
+          </Col>
+
+          {/* Recent Payments Table */}
+          <Col lg={12}>
+            <div style={sectionCardStyle}>
+              <div style={sectionHeaderStyle}>
+                <span style={sectionTitleStyle}>Recent Payments</span>
+              </div>
+
+              {recentPayments.length === 0 ? (
+                <p style={smallMutedText}>No recent payments.</p>
+              ) : (
+                recentPayments.map((p, index) => (
+                  <div key={index} style={listItemRow}>
+                    <div>
+                      <div style={listTitle}>{p.feeType}</div>
+                      <div style={smallMutedText}>
+                        ₹ {p.amount} • {p.date}
+                      </div>
+                    </div>
+                    <div style={listRightText}>{p.status}</div>
+                  </div>
+                ))
+              )}
             </div>
           </Col>
         </Row>
       );
     }
 
+    if (activeSection === "attendance") {
+      return (
+        <div style={{ ...sectionCardStyle, padding: 20 }}>
+          <div style={sectionHeaderStyle}>
+            <span style={sectionTitleStyle}>Attendance</span>
+
+            {/* Date Picker */}
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "1px solid #D1D5DB",
+                fontSize: "0.85rem",
+              }}
+            />
+          </div>
+
+          {/* ===== TABLE HEADER (SAME AS TEACHER STYLE) ===== */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              fontSize: "0.78rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              color: "#4B5563",
+              fontWeight: 600,
+              padding: "8px 0",
+              borderBottom: "1px solid #E5E7EB",
+              background: "#F9FAFB",
+            }}
+          >
+            <span>Roll No</span>
+            <span>Date</span>
+            <span>Status</span>
+          </div>
+
+          {/* ===== TABLE BODY ===== */}
+          {attendanceList.length === 0 ? (
+            <div
+              style={{
+                padding: "20px 0",
+                textAlign: "center",
+                color: "#6B7280",
+                fontSize: "0.9rem",
+              }}
+            >
+              Attendance records will appear here.
+            </div>
+          ) : (
+            attendanceList.map((a) => (
+              <div
+                key={a.aid}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  fontSize: "0.9rem",
+                  padding: "10px 0",
+                  borderBottom: "1px solid #F3F4F6",
+                  alignItems: "center",
+                }}
+              >
+                <span>{a.srollno}</span>
+                <span>{a.dateattendance}</span>
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: a.status === "present" ? "#16A34A" : "#DC2626",
+                  }}
+                >
+                  {a.status}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      );
+    }
+
     // DEFAULT: DASHBOARD OVERVIEW
+
     return (
-      <>
-        {/* Stats Row */}
-        <Row className="g-3 mb-3">
-          <Col md={3} sm={6}>
-            <div style={statCardStyle}>
-              <span style={statLabelStyle}>CGPA</span>
-              <span style={statValueStyle}>8.6</span>
-              <span style={statChipStyle}>Good standing</span>
-            </div>
-          </Col>
-          <Col md={3} sm={6}>
-            <div style={statCardStyle}>
-              <span style={statLabelStyle}>Credits Completed</span>
-              <span style={statValueStyle}>96</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>
-                24 remaining
-              </span>
-            </div>
-          </Col>
-          <Col md={3} sm={6}>
-            <div style={statCardStyle}>
-              <span style={statLabelStyle}>Attendance</span>
-              <span style={statValueStyle}>92%</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>
-                Above minimum
-              </span>
-            </div>
-          </Col>
-          <Col md={3} sm={6}>
-            <div style={statCardStyle}>
-              <span style={statLabelStyle}>Fee Pending</span>
-              <span style={statValueStyle}>₹ 20K</span>
-              <span style={{ ...smallMutedText, marginTop: 4 }}>
-                Due next month
-              </span>
-            </div>
-          </Col>
-        </Row>
-
-        {/* Courses & Notices */}
-        <Row className="g-3">
-          <Col lg={8}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Enrolled Courses</span>
-                <span style={sectionLinkStyle}>View all</span>
-              </div>
-
-              <div style={tableHeaderStyle}>
-                <span>Course</span>
-                <span>Code</span>
-                <span>ECTS</span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Object Oriented Programming</span>
-                <span>CSE201</span>
-                <span>4</span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Database Management Systems</span>
-                <span>CSE210</span>
-                <span>3</span>
-              </div>
-
-              <div style={tableRowStyle}>
-                <span>Discrete Mathematics</span>
-                <span>MTH205</span>
-                <span>3</span>
-              </div>
-            </div>
-          </Col>
-
-          <Col lg={4}>
-            <div style={sectionCardStyle}>
-              <div style={sectionHeaderStyle}>
-                <span style={sectionTitleStyle}>Notices</span>
-              </div>
-
-              <div style={listItemRow}>
-                <div>
-                  <div style={listTitle}>Mid-term Exam</div>
-                  <div style={smallMutedText}>Starts from 2nd October</div>
-                </div>
-              </div>
-
-              <div style={listItemRow}>
-                <div>
-                  <div style={listTitle}>Holiday</div>
-                  <div style={smallMutedText}>
-                    15th August – Independence Day
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </>
+      <div style={{ color: "#6B7280", padding: 20 }}>
+        Select a section from the sidebar.
+      </div>
     );
   };
 
@@ -644,75 +632,47 @@ export default function StudentDashboard() {
     <div style={layoutStyle}>
       {/* Sidebar */}
       <aside style={sidebarStyle}>
-        <div style={sidebarTopStyle}>
-          <div>
-            <div style={sidebarTitleStyle}>Student Panel</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* PROFILE — TOP */}
+          <div
+            style={sidebarItemStyle(activeSection === "profile")}
+            onClick={() => setActiveSection("profile")}
+          >
+            <span>👤</span>
+            <span>Profile</span>
           </div>
 
+          {/* ATTENDANCE */}
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              marginTop: 20,
-            }}
+            style={sidebarItemStyle(activeSection === "attendance")}
+            onClick={() => setActiveSection("attendance")}
           >
-            <div
-              style={sidebarItemStyle(activeSection === "dashboard")}
-              onClick={() => setActiveSection("dashboard")}
-            >
-              <span style={iconStyle(activeSection === "dashboard")}>🧭</span>
-              <span>Dashboard</span>
-            </div>
-            <div
-              style={sidebarItemStyle(activeSection === "courses")}
-              onClick={() => setActiveSection("courses")}
-            >
-              <span style={iconStyle(activeSection === "courses")}>📄</span>
-              <span>Courses</span>
-            </div>
-            <div
-              style={sidebarItemStyle(activeSection === "attendance")}
-              onClick={() => setActiveSection("attendance")}
-            >
-              <span style={iconStyle(activeSection === "attendance")}>📆</span>
-              <span>Attendance</span>
-            </div>
-            <div
-              style={sidebarItemStyle(activeSection === "marks")}
-              onClick={() => setActiveSection("marks")}
-            >
-              <span style={iconStyle(activeSection === "marks")}>📊</span>
-              <span>Marks</span>
-            </div>
-            <div
-              style={sidebarItemStyle(activeSection === "payments")}
-              onClick={() => setActiveSection("payments")}
-            >
-              <span style={iconStyle(activeSection === "payments")}>💰</span>
-              <span>Payment Info</span>
-            </div>
-            <div
-              style={sidebarItemStyle(activeSection === "profile")}
-              onClick={() => setActiveSection("profile")}
-            >
-              <span style={iconStyle(activeSection === "profile")}>👤</span>
-              <span>Profile</span>
-            </div>
+            <span>📆</span>
+            <span>Attendance</span>
+          </div>
+
+          {/* MARKS */}
+          <div
+            style={sidebarItemStyle(activeSection === "marks")}
+            onClick={() => setActiveSection("marks")}
+          >
+            <span>📊</span>
+            <span>Marks</span>
+          </div>
+
+          {/* PAYMENTS — RESTORED */}
+          <div
+            style={sidebarItemStyle(activeSection === "payments")}
+            onClick={() => setActiveSection("payments")}
+          >
+            <span>💰</span>
+            <span>Payments</span>
           </div>
         </div>
 
+        {/* LOGOUT */}
         <div style={sidebarFooterStyle}>
-          <div
-            style={logoutStyle}
-            onClick={handleLogout}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "rgba(255, 69, 58, 1)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "rgba(255, 69, 58, 0.9)")
-            }
-          >
+          <div style={logoutStyle} onClick={handleLogout}>
             ⎋ Logout
           </div>
         </div>
@@ -726,19 +686,15 @@ export default function StudentDashboard() {
             <div style={bannerStyle}>
               <div>
                 <p style={bannerTitleStyle}>Welcome Back, {userName}!</p>
-                <p style={bannerSubtitleStyle}>
-                  Here’s a quick snapshot of your academics today.
-                </p>
               </div>
               <div style={bannerRightStyle}>🎓</div>
             </div>
 
             {/* Small text below banner */}
             <div>
-              <p style={titleStyle}>Student Dashboard</p>
+              <p style={titleStyle}>Student Profile</p>
               <p style={subtitleStyle}>
-                Track your CGPA, attendance, courses, marks, and fee status in
-                one place.
+                View your academic and personal information.
               </p>
             </div>
           </div>
