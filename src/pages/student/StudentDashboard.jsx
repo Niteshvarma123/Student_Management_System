@@ -19,9 +19,10 @@ export default function StudentDashboard() {
       .then((res) => {
         console.log("Student Profile:", res.data);
         setStudent(res.data);
+         setSrollno(res.data.srollno);        
+         localStorage.setItem("srollno", res.data.srollno);
 
-        // store roll no for other APIs
-        localStorage.setItem("srollno", res.data.srollno);
+        
       })
       .catch((err) => {
         console.error("Profile fetch failed", err);
@@ -40,11 +41,13 @@ export default function StudentDashboard() {
     saddress: "",
   });
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const [srollno, setSrollno] = useState(null);
+
   const [marks, setMarks] = useState([]);
   const [attendanceList, setAttendanceList] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
-  const srollno = localStorage.getItem("srollno");
+  
   const userName = localStorage.getItem("userName") || "User";
 
   // Profile
@@ -95,7 +98,7 @@ export default function StudentDashboard() {
     if (!srollno) return;
 
     axios
-      .get(`http://localhost:8080/payments/student/${srollno}`)
+      .get(`http://localhost:8080/student/details/${srollno}`)
       .then((res) => {
         if (res.data) {
           setFeeData({
