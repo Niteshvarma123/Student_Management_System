@@ -21,6 +21,7 @@ export default function StudentDashboard() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
   const srollno = localStorage.getItem("srollno");
+  const userName = localStorage.getItem("userName") || "User";
 
   // Profile
   useEffect(() => {
@@ -32,7 +33,6 @@ export default function StudentDashboard() {
     axios
       .get(`http://localhost:8080/student/${srollno}`)
       .then((res) => {
-        console.log("Student data:", res.data);
         setStudent(res.data);
         setLoadingProfile(false);
       })
@@ -40,7 +40,7 @@ export default function StudentDashboard() {
         console.error("Student profile fetch failed", err.response || err);
         setLoadingProfile(false);
       });
-  }, []);
+  }, [srollno]);
 
   /** Fetch attendance whenever date changes */
   useEffect(() => {
@@ -53,7 +53,6 @@ export default function StudentDashboard() {
   }, [srollno, date]);
 
   /** LAYOUT & SIDEBAR STYLES **/
-  const userName = localStorage.getItem("userName") || "User";
   const calculateTotal = (m) =>
     (Number(m.marks1) || 0) + (Number(m.marks2) || 0) + (Number(m.marks3) || 0);
 
