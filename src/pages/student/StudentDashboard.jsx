@@ -40,7 +40,7 @@ export default function StudentDashboard() {
         console.error("Student profile fetch failed", err.response || err);
         setLoadingProfile(false);
       });
-  }, []);
+  }, [srollno]);
 
   /** Fetch attendance whenever date changes */
   useEffect(() => {

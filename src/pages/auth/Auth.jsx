@@ -263,7 +263,7 @@ export default function Auth() {
                       );
                       console.log(res.data); // <-- Add this line
                       if (res.data === "Login Successful") {
-                        localStorage.setItem("userName", res.data.sname);
+                        localStorage.setItem("semail", email);
                         localStorage.setItem("srollno", res.data.srollno);
                         navigate("/student/dashboard");
                       } else {
