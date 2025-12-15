@@ -24,7 +24,6 @@ export default function StudentDashboard() {
 
   // Profile
   useEffect(() => {
-    const srollno = localStorage.getItem("srollno");
     if (!srollno) {
       console.error("Student roll number missing in localStorage");
       return;
@@ -32,10 +31,15 @@ export default function StudentDashboard() {
 
     axios
       .get(`http://localhost:8080/student/${srollno}`)
-      .then((res) => setStudent(res.data))
-      .catch((err) =>
-        console.error("Student profile fetch failed", err.response || err)
-      );
+      .then((res) => {
+        console.log("Student data:", res.data);
+        setStudent(res.data);
+        setLoadingProfile(false);
+      })
+      .catch((err) => {
+        console.error("Student profile fetch failed", err.response || err);
+        setLoadingProfile(false);
+      });
   }, []);
 
   /** Fetch attendance whenever date changes */
