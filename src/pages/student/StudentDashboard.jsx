@@ -7,6 +7,94 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 export default function StudentDashboard() {
   const navigate = useNavigate();
 
+
+
+const semail = localStorage.getItem("semail");
+
+useEffect(() => {
+  if (!semail) return;
+
+  setLoadingProfile(true);
+
+  axios
+    .get(`http://localhost:8080/student/email/${semail}`)
+    .then((res) => {
+      console.log("Student Profile:", res.data);
+      setStudent(res.data);
+
+      // store roll no for other APIs
+      localStorage.setItem("srollno", res.data.srollno);
+    })
+    .catch((err) => {
+      console.error("Profile fetch failed", err);
+    })
+    .finally(() => {
+      setLoadingProfile(false);
+    });
+}, [semail]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const [activeSection, setActiveSection] = useState("profile");
   const [student, setStudent] = useState({
     srollno: "",
@@ -21,26 +109,25 @@ export default function StudentDashboard() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
   const srollno = localStorage.getItem("srollno");
+  const userName = localStorage.getItem("userName") || "User";
+ 
 
   // Profile
-  useEffect(() => {
-    if (!srollno) {
-      console.error("Student roll number missing in localStorage");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!semail) return;
 
-    axios
-      .get(`http://localhost:8080/student/${srollno}`)
-      .then((res) => {
-        console.log("Student data:", res.data);
-        setStudent(res.data);
-        setLoadingProfile(false);
-      })
-      .catch((err) => {
-        console.error("Student profile fetch failed", err.response || err);
-        setLoadingProfile(false);
-      });
-  }, [srollno]);
+  //   axios
+  //     .get(`http://localhost:8080/student/${semail}`)
+  //     .then((res) => {
+  //       console.log("Student data:", res.data);
+  //       setStudent(res.data);
+  //       localStorage.setItem("semail",res.data.semail);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Student profile fetch failed", err.response || err);
+  //       setLoadingProfile(false);
+  //     });
+  // }, [semail]);
 
   /** Fetch attendance whenever date changes */
   useEffect(() => {
@@ -53,7 +140,6 @@ export default function StudentDashboard() {
   }, [srollno, date]);
 
   /** LAYOUT & SIDEBAR STYLES **/
-  const userName = localStorage.getItem("userName") || "User";
   const calculateTotal = (m) =>
     (Number(m.marks1) || 0) + (Number(m.marks2) || 0) + (Number(m.marks3) || 0);
 

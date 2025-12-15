@@ -257,17 +257,16 @@ export default function Auth() {
 
                   if (activeTab === "student") {
                     try {
-                      const res = await axios.post(
+                      res = await axios.post(
                         "http://localhost:8080/student/slogin",
                         { semail: email, spassword: password }
                       );
                       console.log(res.data); // <-- Add this line
                       if (res.data === "Login Successful") {
                         localStorage.setItem("semail", email);
-                        localStorage.setItem("srollno", res.data.srollno);
                         navigate("/student/dashboard");
                       } else {
-                        alert(res.data.message || "Login failed");
+                        alert(res.data || "Login failed");
                       }
                     } catch (err) {
                       console.error("Login Error:", err);
