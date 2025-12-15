@@ -255,17 +255,22 @@ export default function Auth() {
                 try {
                   let res;
                   if (activeTab === "student") {
-                    const res = await axios.post(
-                      "http://localhost:8080/student/slogin",
-                      { semail: email, spassword: password }
-                    );
-
-                    if (res.data.login === "success") {
-                      localStorage.setItem("srollno", res.data.srollno);
-                      localStorage.setItem("userName", res.data.sname);
-                      navigate("/student/dashboard");
-                    } else {
-                      alert(res.data.message || "Login failed");
+                    try {
+                      const res = await axios.post(
+                        "http://localhost:8080/student/slogin",
+                        { semail: email, spassword: password }
+                      );
+                      console.log(res.data); // <-- Add this line
+                      if (res.data.login === "success") {
+                        localStorage.setItem("srollno", res.data.srollno);
+                        localStorage.setItem("userName", res.data.sname);
+                        navigate("/student/dashboard");
+                      } else {
+                        alert(res.data.message || "Login failed");
+                      }
+                    } catch (err) {
+                      console.error("Login Error:", err);
+                      alert("Login Failed!");
                     }
                   } else if (activeTab === "teacher") {
                     res = await axios.post(
