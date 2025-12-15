@@ -85,8 +85,8 @@ export default function StudentDashboard() {
 
   // Add this state at the top with other states
   const [feeData, setFeeData] = useState({
-    totalFee: 0,
-    paidFee: 0,
+    stotalfee: 0,
+    spaid: 0,
     recentPayments: [],
   });
 
@@ -95,22 +95,17 @@ export default function StudentDashboard() {
     if (!srollno) return;
 
     axios
-      .get(`http://localhost:8080/payments/student/${srollno}`)
+      .get(`http://localhost:8080/student/details/${srollno}`)
       .then((res) => {
-        console.log("Payments response:", res.data);
-
-        setFeeData({
-          totalFee: res.data.totalFee ?? 0,
-          paidFee: res.data.paidFee ?? 0,
-          recentPayments: res.data.recentPayments ?? [],
-        });
+        if (res.data) {
+          setFeeData({
+            totalFee: res.data.stotalfee || 0,
+            paidFee: res.data.spaid || 0,
+            recentPayments: res.data.recentPayments || [],
+          });
+        }
       })
-      .catch((err) => {
-        console.error(
-          "Fee data fetch failed:",
-          err.response?.data || err.message
-        );
-      });
+      .catch((err) => console.error("Fee data fetch failed:", err));
   }, [srollno]);
 
   // marks
@@ -471,8 +466,8 @@ export default function StudentDashboard() {
     }
 
     if (activeSection === "payments") {
-      const { totalFee, paidFee, recentPayments } = feeData;
-      const unpaidFee = totalFee - paidFee;
+      const { stotalfee, spaid, recentPayments } = feeData;
+      const sunpaid = stotalfee - spaid;
 
       return (
         <Row className="g-3">
@@ -483,7 +478,7 @@ export default function StudentDashboard() {
                 <span style={sectionTitleStyle}>Total Fee</span>
               </div>
               <p style={{ fontSize: "1.2rem", fontWeight: 700 }}>
-                ₹ {totalFee}
+                ₹ {student.stotalfee}
               </p>
             </div>
           </Col>
@@ -501,7 +496,7 @@ export default function StudentDashboard() {
                   color: "#16A34A",
                 }}
               >
-                ₹ {paidFee}
+                ₹ {student.spaid}
               </p>
             </div>
           </Col>
@@ -519,9 +514,9 @@ export default function StudentDashboard() {
                   color: "#DC2626",
                 }}
               >
-                ₹ {unpaidFee}
+                ₹ {student.sunpaid}
               </p>
-              {unpaidFee > 0 && (
+              {sunpaid > 0 && (
                 <Button
                   style={{
                     marginTop: 12,
