@@ -34,7 +34,16 @@ export default function StudentDashboard() {
 
     axios
       .get(`http://localhost:8080/student/${srollno}`)
-      .then((res) => setStudent(res.data))
+      .then((res) => {
+        const data = res.data;
+        setStudent({
+          srollno: data.srollno || data.rollno,
+          sname: data.sname || data.name,
+          semail: data.semail || data.email,
+          sphone: data.sphone || data.phone,
+          saddress: data.saddress || data.address,
+        });
+      })
       .catch((err) =>
         console.error("Student profile fetch failed", err.response || err)
       )
