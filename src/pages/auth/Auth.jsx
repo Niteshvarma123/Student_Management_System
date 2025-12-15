@@ -254,6 +254,7 @@ export default function Auth() {
                 e.preventDefault();
                 try {
                   let res;
+                 
                   if (activeTab === "student") {
                     try {
                       const res = await axios.post(
@@ -261,7 +262,7 @@ export default function Auth() {
                         { semail: email, spassword: password }
                       );
                       console.log(res.data); // <-- Add this line
-                      if (res.data.login === "success") {
+                      if (res.data === "Login Successful") {
                         localStorage.setItem("srollno", res.data.srollno);
                         localStorage.setItem("userName", res.data.sname);
                         navigate("/student/dashboard");
