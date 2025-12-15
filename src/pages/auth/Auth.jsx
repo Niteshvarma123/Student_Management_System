@@ -253,88 +253,54 @@ export default function Auth() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 try {
-                  let res;
-
                   if (activeTab === "student") {
-                    try {
-                      const res = await axios.post(
-                        "http://localhost:8080/student/slogin",
-                        { semail: email, spassword: password }
-                      );
-                      console.log(res.data); // <-- Add this line
-                      if (res.data === "Login Successful") {
-                        localStorage.setItem("sname", res.data.sname);
-                        localStorage.setItem("srollno", res.data.srollno);
-                        navigate("/student/dashboard");
-                      } else {
-                        alert(res.data.message || "Login failed");
-                      }
-                    } catch (err) {
-                      console.error("Login Error:", err);
-                      alert("Login Failed!");
+                    const res = await axios.post(
+                      "http://localhost:8080/student/slogin",
+                      { semail: email, spassword: password }
+                    );
+
+                    if (res.data.success) {
+                      // Backend should return { success: true, student: { sname, srollno, semail } }
+                      const student = res.data.student;
+                      localStorage.setItem("sname", student.sname);
+                      localStorage.setItem("srollno", student.srollno);
+                      localStorage.setItem("semail", student.semail); // optional, if needed
+                      navigate("/student/dashboard");
+                    } else {
+                      alert(res.data.message || "Login failed");
                     }
                   } else if (activeTab === "teacher") {
-                    res = await axios.post(
+                    const res = await axios.post(
                       "http://localhost:8080/auth/tlogin",
                       { temail: email, tpassword: password }
                     );
 
-                    if (res.data === "Login Successful") {
-                      // ✅ STORE EMAIL (THIS FIXES PROFILE)
+                    if (res.data.success) {
                       localStorage.setItem("temail", email);
-
                       navigate("/teacher/dashboard");
                     } else {
-                      alert(res.data);
+                      alert(res.data.message || "Login failed");
                     }
                   } else if (activeTab === "admin") {
-                    res = await axios.post("http://localhost:8080/auth/login", {
-                      adminemail: email,
-                      adminpassword: password,
-                    });
-                    if (res.data === "Login Successful") {
+                    const res = await axios.post(
+                      "http://localhost:8080/auth/login",
+                      {
+                        adminemail: email,
+                        adminpassword: password,
+                      }
+                    );
+                    if (res.data.success) {
                       navigate("/admin/dashboard");
                     } else {
-                      alert(res.data);
+                      alert(res.data.message || "Login failed");
                     }
                   }
                 } catch (err) {
+                  console.error("Login Error:", err);
                   alert("Login Failed!");
-                  console.error(err);
                 }
               }}
-            >
-              <label htmlFor="em" style={{ fontWeight: "700" }}>
-                Email Address:
-              </label>
-              <input
-                type="email"
-                placeholder="Email"
-                id="em"
-                style={formControl}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <label htmlFor="ps" style={{ fontWeight: "700" }}>
-                Password:
-              </label>
-              <input
-                type="password"
-                placeholder="Password"
-                style={formControl}
-                id="ps"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-
-              <div style={smallLinkRow}>
-                <span style={smallLink}>Forgot password?</span>
-              </div>
-
-              <button type="submit" style={primaryButton}>
-                Login
-              </button>
-            </form>
+            ></form>
           </div>
 
           <div

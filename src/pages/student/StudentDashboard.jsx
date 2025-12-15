@@ -24,14 +24,18 @@ export default function StudentDashboard() {
 
   // Profile
   useEffect(() => {
-    const name = localStorage.getItem("sname");
-    const roll = localStorage.getItem("srollno");
-
-    if (!name || !roll) {
-      navigate("/auth"); // redirect to login if not found
-    } else {
-      setStudent({ name, roll });
+    const srollno = localStorage.getItem("srollno");
+    if (!srollno) {
+      console.error("Student roll number missing in localStorage");
+      return;
     }
+
+    axios
+      .get(`http://localhost:8080/student/${srollno}`)
+      .then((res) => setStudent(res.data))
+      .catch((err) =>
+        console.error("Student profile fetch failed", err.response || err)
+      );
   }, []);
 
   /** Fetch attendance whenever date changes */
