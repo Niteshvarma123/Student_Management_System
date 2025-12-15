@@ -45,7 +45,7 @@ export default function StudentDashboard() {
       .finally(() => {
         setLoadingProfile(false); // ✅ THIS WAS MISSING
       });
-  }, []);
+  }, [srollno]);
 
   /** Fetch attendance whenever date changes */
   useEffect(() => {
