@@ -47,7 +47,9 @@ export default function StudentDashboard() {
       .catch((err) =>
         console.error("Student profile fetch failed", err.response || err)
       )
-      .finally(() => setLoadingProfile(false));
+      .finally(() => {
+        setLoadingProfile(false); // ✅ THIS WAS MISSING
+      });
   }, []);
 
   /** Fetch attendance whenever date changes */
