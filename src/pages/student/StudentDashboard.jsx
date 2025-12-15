@@ -25,21 +25,25 @@ export default function StudentDashboard() {
   const userEmail = localStorage.getItem("semail");
 
   // Profile
-  useEffect(() => {
-    if (!srollno) return;
 
+  useEffect(() => {
     if (!userEmail) {
-      axios
-        .get(`http://localhost:8080/student/${srollno}`)
-        .then((res) => {
-          setStudent(res.data);
-          localStorage.setItem("semail", res.data.semail);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      setStudent((prev) => ({ ...prev, semail: userEmail }));
+      navigate("/auth");
+      return;
     }
-  }, [srollno, userEmail]);
+
+    axios
+      .get(`http://localhost:8080/student/email/${userEmail}`)
+      .then((res) => {
+        setStudent(res.data);
+        localStorage.setItem("srollno", res.data.srollno); // cache roll no
+        setLoadingProfile(false);
+      })
+      .catch((err) => {
+        console.error("Profile fetch failed:", err);
+        setLoadingProfile(false);
+      });
+  }, [userEmail, navigate]);
 
   /** Fetch attendance whenever date changes */
   useEffect(() => {
@@ -282,8 +286,10 @@ export default function StudentDashboard() {
 
       // Clear any stored user info
       localStorage.removeItem("token");
+      localStorage.removeItem("semail");
       localStorage.removeItem("srollno");
       localStorage.removeItem("userName");
+
       sessionStorage.clear();
       navigate("/auth");
     } catch (error) {
