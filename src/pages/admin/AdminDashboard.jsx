@@ -212,6 +212,7 @@ const AdminDashboard = () => {
     try {
       const res = await axios.get("http://localhost:8080/student/all");
       setStudentList(res.data || []);
+      
     } catch (error) {
       console.error("Failed to fetch students:", error);
       setStudentList([]);
@@ -259,6 +260,7 @@ const AdminDashboard = () => {
       });
 
       fetchStudents();
+      
     } catch (err) {
       console.error(err);
       alert("Failed to register student");
