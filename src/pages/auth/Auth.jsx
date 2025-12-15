@@ -263,8 +263,9 @@ export default function Auth() {
                       );
                       console.log(res.data); // <-- Add this line
                       if (res.data === "Login Successful") {
-                        localStorage.setItem("userName", res.data.sname);
                         localStorage.setItem("srollno", res.data.srollno);
+                        localStorage.setItem("userName", res.data.sname);
+                        localStorage.setItem("semail", res.data.semail); // ✅ store email
                         navigate("/student/dashboard");
                       } else {
                         alert(res.data.message || "Login failed");
