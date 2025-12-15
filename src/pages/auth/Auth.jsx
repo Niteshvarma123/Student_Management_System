@@ -14,7 +14,8 @@ export default function Auth() {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-background: "linear-gradient(135deg, #7C3AED 0%, #86d9ffff 40%, #ed3ae4ff 100%)",
+    background:
+      "linear-gradient(135deg, #7C3AED 0%, #86d9ffff 40%, #ed3ae4ff 100%)",
     fontFamily:
       "'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   };
@@ -254,14 +255,17 @@ background: "linear-gradient(135deg, #7C3AED 0%, #86d9ffff 40%, #ed3ae4ff 100%)"
                 try {
                   let res;
                   if (activeTab === "student") {
-                    res = await axios.post(
+                    const res = await axios.post(
                       "http://localhost:8080/student/slogin",
                       { semail: email, spassword: password }
                     );
-                    if (res.data === "Login Successful") {
+
+                    if (res.data.login === "success") {
+                      localStorage.setItem("srollno", res.data.srollno);
+                      localStorage.setItem("userName", res.data.sname);
                       navigate("/student/dashboard");
                     } else {
-                      alert(res.data);
+                      alert(res.data.message || "Login failed");
                     }
                   } else if (activeTab === "teacher") {
                     res = await axios.post(
