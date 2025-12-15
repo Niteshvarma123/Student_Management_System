@@ -1,4 +1,4 @@
-// StudentDashboard.jsx
+// / StudentDashboard.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,94 +6,6 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
-
-
-
-const semail = localStorage.getItem("semail");
-
-useEffect(() => {
-  if (!semail) return;
-
-  setLoadingProfile(true);
-
-  axios
-    .get(`http://localhost:8080/student/email/${semail}`)
-    .then((res) => {
-      console.log("Student Profile:", res.data);
-      setStudent(res.data);
-
-      // store roll no for other APIs
-      localStorage.setItem("srollno", res.data.srollno);
-    })
-    .catch((err) => {
-      console.error("Profile fetch failed", err);
-    })
-    .finally(() => {
-      setLoadingProfile(false);
-    });
-}, [semail]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const [activeSection, setActiveSection] = useState("profile");
   const [student, setStudent] = useState({
@@ -110,7 +22,7 @@ useEffect(() => {
 
   const srollno = localStorage.getItem("srollno");
   const userName = localStorage.getItem("userName") || "User";
- 
+  const userEmail = localStorage.getItem("semail");
 
   // Profile
   // useEffect(() => {
