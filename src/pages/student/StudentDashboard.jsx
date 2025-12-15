@@ -19,10 +19,8 @@ export default function StudentDashboard() {
       .then((res) => {
         console.log("Student Profile:", res.data);
         setStudent(res.data);
-         setSrollno(res.data.srollno);        
-         localStorage.setItem("srollno", res.data.srollno);
-
-        
+        setSrollno(res.data.srollno);
+        localStorage.setItem("srollno", res.data.srollno);
       })
       .catch((err) => {
         console.error("Profile fetch failed", err);
@@ -47,7 +45,6 @@ export default function StudentDashboard() {
   const [attendanceList, setAttendanceList] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
-  
   const userName = localStorage.getItem("userName") || "User";
 
   // Profile
@@ -469,7 +466,11 @@ export default function StudentDashboard() {
     }
 
     if (activeSection === "payments") {
+
       const { stotalfee,spaid, recentPayments } = feeData;
+
+     
+
       const sunpaid = stotalfee - spaid;
 
       return (
