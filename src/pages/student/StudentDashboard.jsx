@@ -19,10 +19,8 @@ export default function StudentDashboard() {
       .then((res) => {
         console.log("Student Profile:", res.data);
         setStudent(res.data);
-         setSrollno(res.data.srollno);        
-         localStorage.setItem("srollno", res.data.srollno);
-
-        
+        setSrollno(res.data.srollno);
+        localStorage.setItem("srollno", res.data.srollno);
       })
       .catch((err) => {
         console.error("Profile fetch failed", err);
@@ -47,7 +45,6 @@ export default function StudentDashboard() {
   const [attendanceList, setAttendanceList] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
-  
   const userName = localStorage.getItem("userName") || "User";
 
   // Profile
@@ -98,17 +95,22 @@ export default function StudentDashboard() {
     if (!srollno) return;
 
     axios
-      .get(`http://localhost:8080/student/details/${srollno}`)
+      .get(`http://localhost:8080/payments/student/${srollno}`)
       .then((res) => {
-        if (res.data) {
-          setFeeData({
-            totalFee: res.data.totalFee || 0,
-            paidFee: res.data.paidFee || 0,
-            recentPayments: res.data.recentPayments || [],
-          });
-        }
+        console.log("Payments response:", res.data);
+
+        setFeeData({
+          totalFee: res.data.totalFee ?? 0,
+          paidFee: res.data.paidFee ?? 0,
+          recentPayments: res.data.recentPayments ?? [],
+        });
       })
-      .catch((err) => console.error("Fee data fetch failed:", err));
+      .catch((err) => {
+        console.error(
+          "Fee data fetch failed:",
+          err.response?.data || err.message
+        );
+      });
   }, [srollno]);
 
   // marks
