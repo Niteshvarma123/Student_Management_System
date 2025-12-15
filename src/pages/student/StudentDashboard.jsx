@@ -17,41 +17,45 @@ export default function StudentDashboard() {
   });
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [marks, setMarks] = useState([]);
-  const [attendanceList, setAttendanceList] = useState([]);
+  const [attendanceList] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
   const srollno = localStorage.getItem("srollno");
 
   /** Fetch student profile and marks on component mount */
+  // Profile
+
   useEffect(() => {
+    const srollno = localStorage.getItem("srollno");
+
     if (!srollno) {
+      console.error("Student roll number missing in localStorage");
       setLoadingProfile(false);
       return;
     }
 
-    // Profile fetch
     axios
       .get(`http://localhost:8080/student/${srollno}`)
-      .then((res) => res.data && setStudent(res.data))
-      .catch((err) => console.error("Profile fetch failed:", err))
-      .finally(() => setLoadingProfile(false));
-
-    // Marks fetch
-    axios
-      .get(`http://localhost:8080/marks/student/${srollno}`)
-      .then((res) => setMarks(res.data))
-      .catch((err) => console.error("Marks fetch failed:", err));
-  }, [srollno]);
+      .then((res) => {
+        setStudent(res.data);
+      })
+      .catch((err) =>
+        console.error("Student profile fetch failed", err.response || err)
+      )
+      .finally(() => {
+        setLoadingProfile(false); // ✅ THIS WAS MISSING
+      });
+  }, []);
 
   /** Fetch attendance whenever date changes */
   useEffect(() => {
     if (!srollno) return;
 
     axios
-      .get(`http://localhost:8080/attendance/student/${srollno}/${date}`)
-      .then((res) => setAttendanceList(res.data))
-      .catch((err) => console.error("Attendance fetch failed:", err));
-  }, [srollno, date]);
+      .get(`http://localhost:8080/marks/student/${srollno}`)
+      .then((res) => setMarks(res.data))
+      .catch((err) => console.error("Marks fetch failed:", err));
+  }, [srollno]);
 
   /** LAYOUT & SIDEBAR STYLES **/
   const userName = localStorage.getItem("userName") || "User";
