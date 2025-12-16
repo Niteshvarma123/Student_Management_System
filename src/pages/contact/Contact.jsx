@@ -12,10 +12,10 @@ import axios from "axios";
 
 export default function ContactForm() {
   const [form, setForm] = useState({
-    firstName: "",
+    fullname: "",
     email: "",
     mobile: "",
-    Description: "",
+    description: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -36,11 +36,11 @@ export default function ContactForm() {
     }
 
     try {
-      await axios.post("http://localhost:8080/api/contact", {
-        firstName: form.firstName,
+      await axios.post("http://localhost:8080/contact/save", {
+        fullname: form.fullname,
         email: form.email,
         mobile: form.mobile,
-        description: form.Description,
+        description: form.description,
       });
 
       setSubmitted(true);
@@ -48,10 +48,10 @@ export default function ContactForm() {
 
       // reset form
       setForm({
-        firstName: "",
+        fullname: "",
         email: "",
         mobile: "",
-        Description: "",
+        description: "",
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -110,9 +110,9 @@ export default function ContactForm() {
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    name="firstName"
+                    name="fullname"
                     placeholder="Enter your full name"
-                    value={form.firstName}
+                    value={form.fullname}
                     onChange={handleChange}
                     required
                     style={{
@@ -165,9 +165,9 @@ export default function ContactForm() {
                   <Form.Label>Description</Form.Label>
                   <Form.Control
                     as="textarea"
-                    name="Description"
+                    name="description"
                     placeholder="Enter your Message"
-                    value={form.Description}
+                    value={form.description}
                     onChange={handleChange}
                     required
                     style={{
