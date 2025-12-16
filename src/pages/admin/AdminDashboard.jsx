@@ -384,7 +384,7 @@ const AdminDashboard = () => {
       desc: "Registered teachers",
     },
     { title: "Classes", value: "12", desc: "Active classes" },
-    { title: "Fees Collected", value: student.spaid, desc: "This semester" },
+    { title: "Fees Collected", value: 400000, desc: "This semester" },
     { title: "Attendance Avg", value: "88%", desc: "Overall" },
     { title: "Pending Registrations", value: "3", desc: "New requests" },
   ];

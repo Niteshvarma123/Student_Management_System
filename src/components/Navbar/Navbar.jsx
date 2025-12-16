@@ -35,7 +35,7 @@ export default function AppNavbar() {
           <span
             style={{ color: "#fff", fontWeight: "bold", fontSize: "1.2rem" }}
           >
-            Techgenius academy
+            Techgenius Academy
           </span>
         </Navbar.Brand>
 

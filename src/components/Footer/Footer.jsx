@@ -10,7 +10,7 @@ export default function Footer() {
           {/* ABOUT */}
           <Col md={4} className="mb-3">
             <h5 style={{ color: "#ff5a3c", fontWeight: "700" }}>
-              Techgenius academy
+              Techgenius Academy
             </h5>
             <p style={{ fontSize: "0.95rem", lineHeight: "1.6" }}>
               A centralized platform to manage student information, academic
