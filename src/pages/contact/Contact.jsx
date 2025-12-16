@@ -3,10 +3,10 @@ import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap"
 
 export default function ContactForm() {
  const [form, setForm] = useState({
-    firstName: "",
+    fullname: "",
     email: "",
     mobile: "",
-    Description: "",
+    description: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -30,10 +30,10 @@ export default function ContactForm() {
     setValidated(false);
 
     setForm({
-      firstName: "",
+      fullname: "",
       email: "",
       mobile: "",
-      Description: "",
+      description: "",
     });
   };
 
