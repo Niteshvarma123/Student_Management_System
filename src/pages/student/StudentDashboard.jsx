@@ -42,8 +42,6 @@ export default function StudentDashboard() {
   const [srollno, setSrollno] = useState(null);
 
   const [marks, setMarks] = useState([]);
-  const [attendanceList, setAttendanceList] = useState([]);
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // today by default
 
   //const userName = localStorage.getItem("userName") || "User";
   const userName = student.sname || "Student";
@@ -64,16 +62,6 @@ export default function StudentDashboard() {
   //       setLoadingProfile(false);
   //     });
   // }, [semail]);
-
-  /** Fetch attendance whenever date changes */
-  useEffect(() => {
-    if (!srollno || !date) return;
-
-    axios
-      .get(`http://localhost:8080/attendance/student/${srollno}?date=${date}`)
-      .then((res) => setAttendanceList(res.data))
-      .catch((err) => console.error("Attendance fetch failed:", err));
-  }, [srollno, date]);
 
   /** LAYOUT & SIDEBAR STYLES **/
   const calculateTotal = (m) =>
@@ -467,10 +455,7 @@ export default function StudentDashboard() {
     }
 
     if (activeSection === "payments") {
-
-      const { stotalfee,spaid, recentPayments } = feeData;
-
-     
+      const { stotalfee, spaid, recentPayments } = feeData;
 
       const sunpaid = stotalfee - spaid;
 
@@ -567,88 +552,6 @@ export default function StudentDashboard() {
       );
     }
 
-    if (activeSection === "attendance") {
-      return (
-        <div style={{ ...sectionCardStyle, padding: 20 }}>
-          <div style={sectionHeaderStyle}>
-            <span style={sectionTitleStyle}>Attendance</span>
-
-            {/* Date Picker */}
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 6,
-                border: "1px solid #D1D5DB",
-                fontSize: "0.85rem",
-              }}
-            />
-          </div>
-
-          {/* ===== TABLE HEADER (SAME AS TEACHER STYLE) ===== */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              fontSize: "0.78rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              color: "#4B5563",
-              fontWeight: 600,
-              padding: "8px 0",
-              borderBottom: "1px solid #E5E7EB",
-              background: "#F9FAFB",
-            }}
-          >
-            <span>Roll No</span>
-            <span>Date</span>
-            <span>Status</span>
-          </div>
-
-          {/* ===== TABLE BODY ===== */}
-          {attendanceList.length === 0 ? (
-            <div
-              style={{
-                padding: "20px 0",
-                textAlign: "center",
-                color: "#6B7280",
-                fontSize: "0.9rem",
-              }}
-            >
-              Attendance records will appear here.
-            </div>
-          ) : (
-            attendanceList.map((a) => (
-              <div
-                key={a.aid}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  fontSize: "0.9rem",
-                  padding: "10px 0",
-                  borderBottom: "1px solid #F3F4F6",
-                  alignItems: "center",
-                }}
-              >
-                <span>{a.srollno}</span>
-                <span>{a.dateattendance}</span>
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: a.status === "present" ? "#16A34A" : "#DC2626",
-                  }}
-                >
-                  {a.status}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
-      );
-    }
-
     // DEFAULT: DASHBOARD OVERVIEW
 
     return (
@@ -672,15 +575,6 @@ export default function StudentDashboard() {
           >
             <span>👤</span>
             <span>Profile</span>
-          </div>
-
-          {/* ATTENDANCE */}
-          <div
-            style={sidebarItemStyle(activeSection === "attendance")}
-            onClick={() => setActiveSection("attendance")}
-          >
-            <span>📆</span>
-            <span>Attendance</span>
           </div>
 
           {/* MARKS */}

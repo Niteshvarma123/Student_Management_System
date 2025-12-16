@@ -6,30 +6,6 @@ import axios from "axios";
 export default function TeacherDashboard() {
   const navigate = useNavigate();
 
-  const [attendanceList, setAttendanceList] = useState([]);
-  const [date, setDate] = useState("2025-12-14");
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/attendance/date/${date}`)
-      .then((res) => setAttendanceList(res.data))
-      .catch((err) => console.error("Attendance fetch failed", err));
-  }, [date]);
-
-  const handleAttendanceChange = async (aid, newStatus) => {
-    try {
-      await axios.put(`http://localhost:8080/attendance/update/${aid}`, {
-        status: newStatus,
-      });
-
-      setAttendanceList((prev) =>
-        prev.map((s) => (s.aid === aid ? { ...s, status: newStatus } : s))
-      );
-    } catch (err) {
-      console.error("Attendance update failed", err);
-      alert("Failed to update attendance");
-    }
-  };
-
   const [activeSection, setActiveSection] = useState("profile"); // 'dashboard' | 'attendance' | 'marks' | 'profile'
   const [editingMarkId, setEditingMarkId] = useState(null);
   const [editedMark, setEditedMark] = useState({});
@@ -414,82 +390,6 @@ export default function TeacherDashboard() {
       );
     }
 
-    if (activeSection === "attendance") {
-      return (
-        <div style={{ ...sectionCardStyle, padding: 20 }}>
-          <div style={sectionHeaderStyle}>
-            <span style={sectionTitleStyle}>Student Attendance</span>
-
-            {/* 📅 Date Picker */}
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 6,
-                border: "1px solid #D1D5DB",
-                fontSize: "0.85rem",
-              }}
-            />
-          </div>
-
-          {/* Table Header */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              color: "#374151",
-              borderBottom: "1px solid #E5E7EB",
-              paddingBottom: 8,
-            }}
-          >
-            <span>Roll No</span>
-            <span> </span>
-            <span>Attendance</span>
-          </div>
-
-          {/* Table Rows */}
-          {attendanceList.length === 0 ? (
-            <p style={{ marginTop: 12 }}>No attendance data</p>
-          ) : (
-            attendanceList.map((s) => (
-              <div
-                key={s.aid}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                  padding: "10px 0",
-                  borderBottom: "1px solid #F3F4F6",
-                  alignItems: "center",
-                }}
-              >
-                <span>{s.srollno}</span>
-                <span>{s.dateattendance}</span>
-
-                <select
-                  value={s.status}
-                  onChange={(e) =>
-                    handleAttendanceChange(s.aid, e.target.value)
-                  }
-                  style={{
-                    padding: "4px 8px",
-                    borderRadius: 6,
-                    border: "1px solid #D1D5DB",
-                  }}
-                >
-                  <option value="present">Present</option>
-                  <option value="absent">Absent</option>
-                </select>
-              </div>
-            ))
-          )}
-        </div>
-      );
-    }
-
     if (activeSection === "marks") {
       return (
         <div style={{ ...sectionCardStyle, padding: 20 }}>
@@ -642,14 +542,6 @@ export default function TeacherDashboard() {
           >
             <span>👤</span>
             <span>Profile</span>
-          </div>
-
-          <div
-            style={sidebarItemStyle(activeSection === "attendance")}
-            onClick={() => setActiveSection("attendance")}
-          >
-            <span>📆</span>
-            <span>Attendance</span>
           </div>
 
           <div
