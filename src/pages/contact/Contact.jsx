@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Alert,
+} from "react-bootstrap";
+import axios from "axios";
 
 export default function ContactForm() {
- const [form, setForm] = useState({
-    fullname: "",
+  const [form, setForm] = useState({
+    firstName: "",
     email: "",
     mobile: "",
-    description: "",
+    Description: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -16,7 +25,7 @@ export default function ContactForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     const formEl = e.currentTarget;
     e.preventDefault();
 
@@ -26,15 +35,28 @@ export default function ContactForm() {
       return;
     }
 
-    setSubmitted(true);
-    setValidated(false);
+    try {
+      await axios.post("http://localhost:8080/api/contact", {
+        firstName: form.firstName,
+        email: form.email,
+        mobile: form.mobile,
+        description: form.Description,
+      });
 
-    setForm({
-      fullname: "",
-      email: "",
-      mobile: "",
-      description: "",
-    });
+      setSubmitted(true);
+      setValidated(false);
+
+      // reset form
+      setForm({
+        firstName: "",
+        email: "",
+        mobile: "",
+        Description: "",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to submit form. Please try again.");
+    }
   };
 
   return (
@@ -48,7 +70,6 @@ export default function ContactForm() {
       }}
     >
       <Row className="justify-content-center" style={{ width: "100%" }}>
-
         {/* LEFT SIDE – FORM */}
         <Col md={6}>
           <Card
@@ -191,22 +212,22 @@ export default function ContactForm() {
           >
             <center>
               <h4
-              style={{
-                color: "#1f3d7a",
-                fontWeight: "700",
-                marginBottom: "15px",
-              
-              }}
-            >
-              Reach Us
-            </h4>
+                style={{
+                  color: "#1f3d7a",
+                  fontWeight: "700",
+                  marginBottom: "15px",
+                }}
+              >
+                Reach Us
+              </h4>
             </center>
 
             <div style={{ marginBottom: "18px" }}>
-              <h6 style={{ color: "#ff5a3c", fontWeight: "700" }}>📞 Call Us</h6>
-              <p style={{ margin: 0, color: "#444" }}>+91 98765 43210</p> 
-               <p style={{ margin: 0, color: "#444" }}>040 4929 7462</p>
-
+              <h6 style={{ color: "#ff5a3c", fontWeight: "700" }}>
+                📞 Call Us
+              </h6>
+              <p style={{ margin: 0, color: "#444" }}>+91 98765 43210</p>
+              <p style={{ margin: 0, color: "#444" }}>040 4929 7462</p>
             </div>
 
             <div style={{ marginBottom: "18px" }}>
@@ -215,39 +236,55 @@ export default function ContactForm() {
             </div>
 
             <div style={{ marginBottom: "18px" }}>
-              <h6 style={{ color: "#ff5a3c", fontWeight: "700" }}>📍 Address</h6>
+              <h6 style={{ color: "#ff5a3c", fontWeight: "700" }}>
+                📍 Address
+              </h6>
               <p style={{ margin: 0, color: "#444" }}>
-                Student Management System  
-                <br /> Hyderabad, Telangana  
+                Student Management System
+                <br /> Hyderabad, Telangana
                 <br /> India
               </p>
             </div>
 
             <div style={{ marginTop: "20px" }}>
-              <h6 style={{ color: "#1f3d7a", fontWeight: "700" }}>Business Hours</h6>
-              <p style={{ margin: 0, color: "#444" }}>Mon–Sat: 9:00 AM – 7:00 PM</p>
-            </div><br />
+              <h6 style={{ color: "#1f3d7a", fontWeight: "700" }}>
+                Business Hours
+              </h6>
+              <p style={{ margin: 0, color: "#444" }}>
+                Mon–Sat: 9:00 AM – 7:00 PM
+              </p>
+            </div>
+            <br />
 
-<div style={{ width: "100% ",height:"100px", paddingBottom: "56.25%", position: "relative" }}>
-  <h6 style={{color:"#ff5a3c", fontWeight:"800", display:"flex",}}>📍 Location</h6>
-  <iframe
-    title="Our location"
-    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30445.414785019813!2d78.28275199999999!3d17.4751744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1764875529044!5m2!1sen!2sin"
-    style={{
-      border: 0,
-      position: "absolute",
-      top: 50,
-      left: 0,
-      width: "100%",
-      height:"80%",
-    
-    }}
-    allowFullScreen=""
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-  />
-</div>
-
+            <div
+              style={{
+                width: "100% ",
+                height: "100px",
+                paddingBottom: "56.25%",
+                position: "relative",
+              }}
+            >
+              <h6
+                style={{ color: "#ff5a3c", fontWeight: "800", display: "flex" }}
+              >
+                📍 Location
+              </h6>
+              <iframe
+                title="Our location"
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30445.414785019813!2d78.28275199999999!3d17.4751744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1764875529044!5m2!1sen!2sin"
+                style={{
+                  border: 0,
+                  position: "absolute",
+                  top: 50,
+                  left: 0,
+                  width: "100%",
+                  height: "80%",
+                }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </Card>
         </Col>
       </Row>
