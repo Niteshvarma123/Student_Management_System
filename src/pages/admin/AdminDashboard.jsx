@@ -325,7 +325,7 @@ const AdminDashboard = () => {
   const fetchContacts = async () => {
     try {
       setLoadingContacts(true);
-      const res = await axios.get("http://localhost:8080/api/contact");
+      const res = await axios.get("http://localhost:8080/contact/all");
 
       // Expecting array of:
       // { id, fullname, email, mobile, description }
@@ -337,10 +337,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const markCompleted = async (id) => {
+  const markCompleted = async (cid) => {
     try {
-      await axios.delete(`http://localhost:8080/api/contact/${id}`);
-      setContacts((prev) => prev.filter((c) => c.id !== id));
+      await axios.delete(`http://localhost:8080/contact/delete/${cid}`);
+      setContacts((prev) => prev.filter((c) => c.cid !== cid));
     } catch (error) {
       console.error("Failed to delete contact", error);
       alert("Failed to mark as completed");
@@ -516,7 +516,7 @@ const AdminDashboard = () => {
           </thead>
           <tbody>
             {contacts.map((c) => (
-              <tr key={c.id}>
+              <tr key={c.cid}>
                 <td style={styles.td}>{c.fullname}</td>
                 <td style={styles.td}>{c.email}</td>
                 <td style={styles.td}>{c.mobile}</td>
@@ -524,7 +524,7 @@ const AdminDashboard = () => {
                 <td style={styles.td}>
                   <button
                     style={{ ...styles.buttonBase, ...styles.deleteButton }}
-                    onClick={() => markCompleted(c.id)}
+                    onClick={() => markCompleted(c.cid)}
                   >
                     ✔ Completed
                   </button>
