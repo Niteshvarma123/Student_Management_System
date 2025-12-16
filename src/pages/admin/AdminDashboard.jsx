@@ -8,6 +8,7 @@ import {
   FaPlus,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 
 const sidebarItems = [
   { icon: <FaTachometerAlt />, label: "Dashboard", tab: "dashboard" },
@@ -15,6 +16,7 @@ const sidebarItems = [
   { icon: <FaChalkboardTeacher />, label: "Teachers", tab: "teachers" },
   { icon: <FaPlus />, label: "Add Student", tab: "addStudent" },
   { icon: <FaPlus />, label: "Add Teacher", tab: "addTeacher" },
+  { icon: <FaEnvelope />, label: "Contacts", tab: "contacts" },
 ];
 const styles = {
   dashboard: {
@@ -27,7 +29,7 @@ const styles = {
   },
   sidebar: {
     width: "240px",
-    background: "linear-gradient(180deg, #4F46E5 0%, #6366F1 100%)",   
+    background: "linear-gradient(180deg, #4F46E5 0%, #6366F1 100%)",
     color: "#fff",
     padding: "20px",
   },
@@ -212,7 +214,6 @@ const AdminDashboard = () => {
     try {
       const res = await axios.get("http://localhost:8080/student/all");
       setStudentList(res.data || []);
-      
     } catch (error) {
       console.error("Failed to fetch students:", error);
       setStudentList([]);
@@ -260,7 +261,6 @@ const AdminDashboard = () => {
       });
 
       fetchStudents();
-      
     } catch (err) {
       console.error(err);
       alert("Failed to register student");
@@ -318,6 +318,40 @@ const AdminDashboard = () => {
       alert("Failed to delete teacher");
     }
   };
+  // ---------------- CONTACT STATES ----------------
+  const [contacts, setContacts] = useState([]);
+  const [loadingContacts, setLoadingContacts] = useState(false);
+  // ---------------- FETCH CONTACTS ----------------
+  const fetchContacts = async () => {
+    try {
+      setLoadingContacts(true);
+      const res = await axios.get("http://localhost:8080/api/contact");
+
+      // Expecting array of:
+      // { id, fullname, email, mobile, description }
+      setContacts(res.data || []);
+    } catch (error) {
+      console.error("Failed to fetch contacts", error);
+    } finally {
+      setLoadingContacts(false);
+    }
+  };
+
+  const markCompleted = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/contact/${id}`);
+      setContacts((prev) => prev.filter((c) => c.id !== id));
+    } catch (error) {
+      console.error("Failed to delete contact", error);
+      alert("Failed to mark as completed");
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "contacts") {
+      fetchContacts();
+    }
+  }, [activeTab]);
 
   // Logout
   const handleLogout = async () => {
@@ -460,6 +494,46 @@ const AdminDashboard = () => {
           )}
         </tbody>
       </table>
+    </div>
+  );
+  // render Contacts
+  const renderContacts = () => (
+    <div style={styles.tableContainer}>
+      {loadingContacts ? (
+        <p>Loading contact requests...</p>
+      ) : contacts.length === 0 ? (
+        <p>No contact messages</p>
+      ) : (
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>Name</th>
+              <th style={styles.th}>Email</th>
+              <th style={styles.th}>Mobile</th>
+              <th style={styles.th}>Message</th>
+              <th style={styles.th}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {contacts.map((c) => (
+              <tr key={c.id}>
+                <td style={styles.td}>{c.fullname}</td>
+                <td style={styles.td}>{c.email}</td>
+                <td style={styles.td}>{c.mobile}</td>
+                <td style={styles.td}>{c.description}</td>
+                <td style={styles.td}>
+                  <button
+                    style={{ ...styles.buttonBase, ...styles.deleteButton }}
+                    onClick={() => markCompleted(c.id)}
+                  >
+                    ✔ Completed
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 
@@ -664,6 +738,7 @@ const AdminDashboard = () => {
         {activeTab === "teachers" && renderTeacherTable()}
         {activeTab === "addStudent" && renderAddStudentForm()}
         {activeTab === "addTeacher" && renderAddTeacherForm()}
+        {activeTab === "contacts" && renderContacts()}
       </div>
     </div>
   );
