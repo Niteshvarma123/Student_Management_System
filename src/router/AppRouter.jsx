@@ -19,7 +19,7 @@ export default function AppRouter() {
       <BrowserRouter>
         <Navbar />
 
-        <div style={{ flex: 1 }}>
+        <div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
@@ -33,10 +33,7 @@ export default function AppRouter() {
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route path="/student/dashboard" element={<StudentDashboard />} />
             <Route path="/edit/student/:srollno" element={<EditStudent />} />
-            <Route
-              path="/edit/teacher/:temail"
-              element={<TeacherEditForm />}
-            />
+            <Route path="/edit/teacher/:temail" element={<TeacherEditForm />} />
           </Routes>
         </div>
 

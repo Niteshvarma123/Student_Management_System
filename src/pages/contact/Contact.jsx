@@ -232,7 +232,7 @@ export default function ContactForm() {
 
             <div style={{ marginBottom: "18px" }}>
               <h6 style={{ color: "#ff5a3c", fontWeight: "700" }}>📧 Email</h6>
-              <p style={{ margin: 0, color: "#444" }}>support@example.com</p>
+              <p style={{ margin: 0, color: "#444" }}>techgenius@example.com</p>
             </div>
 
             <div style={{ marginBottom: "18px" }}>
@@ -240,9 +240,9 @@ export default function ContactForm() {
                 📍 Address
               </h6>
               <p style={{ margin: 0, color: "#444" }}>
-                Student Management System
-                <br /> Hyderabad, Telangana
-                <br /> India
+                Flat No: 501, 5th Floor, Amsri Faust Building, Sarojini Devi Rd,
+                near Reliance Digital Mall, Regimental Bazaar, Shivaji Nagar,
+                Secunderabad, Telangana – 500003
               </p>
             </div>
 

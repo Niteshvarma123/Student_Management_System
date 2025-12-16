@@ -10,7 +10,7 @@ export default function Footer() {
           {/* ABOUT */}
           <Col md={4} className="mb-3">
             <h5 style={{ color: "#ff5a3c", fontWeight: "700" }}>
-              Student Management System
+              Techgenius academy
             </h5>
             <p style={{ fontSize: "0.95rem", lineHeight: "1.6" }}>
               A centralized platform to manage student information, academic
@@ -49,7 +49,7 @@ export default function Footer() {
           {/* CONTACT */}
           <Col md={4} className="mb-3">
             <h6 style={{ color: "#fff", fontWeight: "600" }}>Contact Us</h6>
-            <p style={{ marginBottom: "8px" }}>📧 support@example.com</p>
+            <p style={{ marginBottom: "8px" }}>📧 techgenius@example.com</p>
             <p style={{ fontSize: "0.9rem", lineHeight: "1.6" }}>
               📍 Flat No: 501, 5th Floor, Amsri Faust Building, Sarojini Devi
               Rd, near Reliance Digital Mall, Regimental Bazaar, Shivaji Nagar,

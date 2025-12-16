@@ -73,7 +73,7 @@ export default function About() {
             <h2
               style={{ fontSize: "2rem", fontWeight: 700, marginBottom: "8px" }}
             >
-              About Our Student Management System
+              About Our Techgenius academy
             </h2>
             <p style={{ fontSize: "1rem", opacity: 0.9 }}>
               Modern. Secure. Efficient. A platform built for education
@@ -145,7 +145,8 @@ export default function About() {
               </p>
             </AnimatedCard>
           </Col>
-        </Row><br />
+        </Row>
+        <br />
 
         {/* What we do */}
         <Row className="g-4 mb-4">
